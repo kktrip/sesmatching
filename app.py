@@ -31,6 +31,7 @@ from src.email_fetcher import fetch_emails
 from src.attachment_parser import parse_attachment
 from src.ai_processor import classify_and_extract
 from src.matcher import match_candidates
+from src.utils import _parse_rate_yen
 
 
 def _inject_css():
@@ -944,22 +945,25 @@ def show_candidates():
         col1, col2, col3 = st.columns(3)
         with col1:
             q_skill = st.text_input("スキル", key="cand_q_skill")
-            q_rate = st.text_input("単価", key="cand_q_rate")
         with col2:
             q_age_min = st.number_input("年齢（下限）", min_value=0, max_value=99, value=0, step=1, key="cand_q_age_min")
             q_age_max = st.number_input("年齢（上限）", min_value=0, max_value=99, value=99, step=1, key="cand_q_age_max")
         with col3:
+            q_rate_min = st.number_input("単価（下限）万円", min_value=0, value=0, step=1, key="cand_q_rate_min")
+            q_rate_max = st.number_input("単価（上限）万円", min_value=0, value=0, step=1, key="cand_q_rate_max")
+        col_ws, col_avail = st.columns(2)
+        with col_ws:
             q_work_style = st.selectbox(
                 "希望勤務形態",
                 ["指定なし", "リモート", "常駐", "ハイブリッド"],
                 key="cand_q_ws",
             )
+        with col_avail:
             q_available = st.text_input("参画可能時期", key="cand_q_avail")
         q_free = st.text_input("フリーテキスト（全項目検索）", key="cand_q_free")
 
     def _match_candidate(c, data):
         skills_str = " ".join(data.get("skills", [])).lower()
-        rate_str = (data.get("desired_rate") or "").lower()
         ws_str = (data.get("work_style_preference") or "").lower()
         avail_str = (data.get("available_from") or "").lower()
         all_text = (json.dumps(data, ensure_ascii=False) + " " + c["name"]).lower()
@@ -967,8 +971,17 @@ def show_candidates():
 
         if q_skill and q_skill.lower() not in skills_str:
             return False
-        if q_rate and q_rate.lower() not in rate_str:
-            return False
+
+        if q_rate_min > 0 or q_rate_max > 0:
+            cand_min, cand_max = _parse_rate_yen(data.get("desired_rate") or "")
+            if cand_min is not None or cand_max is not None:
+                filter_min = q_rate_min * 10000
+                filter_max = q_rate_max * 10000
+                if filter_min > 0 and cand_max is not None and cand_max < filter_min:
+                    return False
+                if filter_max > 0 and cand_min is not None and cand_min > filter_max:
+                    return False
+
         if age is not None:
             try:
                 age_int = int(age)
