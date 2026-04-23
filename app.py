@@ -312,9 +312,13 @@ def show_candidates():
         if q_rate and q_rate.lower() not in rate_str:
             return False
         if age is not None:
-            if int(age) < q_age_min or int(age) > q_age_max:
-                return False
-        if q_work_style != "指定なし" and q_work_style not in ws_str:
+            try:
+                age_int = int(age)
+                if age_int < q_age_min or age_int > q_age_max:
+                    return False
+            except (ValueError, TypeError):
+                pass
+        if q_work_style != "指定なし" and q_work_style.lower() not in ws_str:
             return False
         if q_available and q_available.lower() not in avail_str:
             return False
