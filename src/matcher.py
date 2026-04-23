@@ -27,7 +27,7 @@ def _parse_json_response(text: str) -> list:
 def _keyword_score(project_data: dict, candidate: dict) -> int:
     """Return keyword overlap count between project required_skills and candidate skills/sheet."""
     required = [s.lower() for s in project_data.get("required_skills", [])]
-    cand_skills = [s.lower() for s in candidate["data"].get("skills", [])]
+    cand_skills = [s.lower() for s in (candidate.get("data") or {}).get("skills", [])]
     sheet = (candidate.get("skill_sheet_text") or "").lower()
     score = 0
     for req in required:
