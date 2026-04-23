@@ -123,6 +123,15 @@ def get_latest_match(project_id):
         ).fetchone()
 
 
+def get_all_matches():
+    with get_connection() as conn:
+        return conn.execute(
+            "SELECT m.*, p.title as project_title "
+            "FROM matches m LEFT JOIN projects p ON m.project_id = p.id "
+            "ORDER BY m.created_at DESC"
+        ).fetchall()
+
+
 def get_stats():
     with get_connection() as conn:
         projects = conn.execute("SELECT COUNT(*) FROM projects").fetchone()[0]
