@@ -62,8 +62,7 @@ def classify_and_extract(subject: str, body: str, attachment_text: str = "") -> 
     "location": "勤務地",
     "work_style": "リモート/常駐/ハイブリッド/不明",
     "budget": "単価・予算（記載がない場合は空文字）",
-    "start_date": "開始時期",
-    "description": "案件概要（300字以内）"
+    "start_date": "開始時期"
   }}
 }}
 
@@ -77,8 +76,7 @@ def classify_and_extract(subject: str, body: str, attachment_text: str = "") -> 
     "experience_years": 経験年数(数値、不明な場合はnull),
     "available_from": "参画可能時期",
     "work_style_preference": "希望勤務形態",
-    "desired_rate": "希望単価（記載がない場合は空文字）",
-    "summary": "人材概要（300字以内）"
+    "desired_rate": "希望単価（記載がない場合は空文字）"
   }}
 }}
 
