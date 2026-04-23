@@ -33,6 +33,7 @@ from src.matcher import match_candidates
 
 
 def _inject_css():
+    """Inject global yellow-theme CSS once at app startup via st.markdown."""
     st.markdown("""
     <style>
     /* ── エクスパンダー（カード） ── */
@@ -65,16 +66,6 @@ def _inject_css():
         font-weight: 600 !important;
     }
     [data-testid="stButton"] > button:hover {
-        background-color: #CA8A04 !important;
-        color: #FFFFFF !important;
-    }
-
-    /* ── プライマリボタン（マッチング実行など） ── */
-    [data-testid="stButton"] > button[kind="primary"] {
-        background-color: #EAB308 !important;
-        color: #1C1917 !important;
-    }
-    [data-testid="stButton"] > button[kind="primary"]:hover {
         background-color: #CA8A04 !important;
         color: #FFFFFF !important;
     }
