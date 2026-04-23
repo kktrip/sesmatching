@@ -869,8 +869,9 @@ def show_projects():
 
     filtered = [(p, data) for p, data in projects_with_data if _match_project(p, data)]
     st.caption(f"{len(filtered)} 件 / 全 {len(projects)} 件")
+    paginated = _paginate(filtered, "projects")
 
-    for p, data in filtered:
+    for p, data in paginated:
         skills = ", ".join(data.get("required_skills", []))
         with st.expander(f"📋 {p['title']}　｜　{data.get('location', '勤務地不明')}　｜　{p['created_at'][:10]}"):
             col1, col2 = st.columns(2)
