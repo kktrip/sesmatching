@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(python *)",
+      "Bash(streamlit run *)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "Bash(git push *)",
+      "Bash(gh pr *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8501/)",
+      "Bash(pkill -f \"streamlit run\")",
+      "Bash(pkill -f \"streamlit\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8502/)",
+      "PowerShell(Stop-Process *)",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_hover",
+      "Bash(git -C /c/Users/kazua/app/sesmatching add src/matcher.py tests/test_matcher.py)",
+      "Bash(git -C /c/Users/kazua/app/sesmatching commit -m \"fix: match_candidates\\(\\)の入力変更なしコピーとHaiku呼び出しガードを追加\")"
+    ]
+  }
+}

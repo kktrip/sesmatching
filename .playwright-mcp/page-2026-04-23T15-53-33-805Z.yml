@@ -1,0 +1,87 @@
+- generic [ref=e2]:
+  - generic [ref=e7]:
+    - button "keyboard_double_arrow_left" [ref=e341] [cursor=pointer]:
+      - generic [ref=e343]: keyboard_double_arrow_left
+    - generic [ref=e11]:
+      - heading "🤝 SES AIマッチング" [level=1] [ref=e15]
+      - separator [ref=e20]
+      - radiogroup "ページ" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]:
+          - radio "📊 ダッシュボード"
+          - paragraph [ref=e27]: 📊 ダッシュボード
+        - generic [ref=e28]:
+          - radio "📋 案件一覧"
+          - paragraph [ref=e31]: 📋 案件一覧
+        - generic [ref=e32]:
+          - radio "👤 人材一覧"
+          - paragraph [ref=e35]: 👤 人材一覧
+        - generic [ref=e36]:
+          - radio "🔍 マッチング" [checked]
+          - paragraph [ref=e39]: 🔍 マッチング
+        - generic [ref=e40]:
+          - radio "⚙️ 設定"
+          - paragraph [ref=e43]: ⚙️ 設定
+      - separator [ref=e48]
+      - heading "メール同期" [level=3] [ref=e52]
+      - button "📥 メールを取得・同期" [ref=e55] [cursor=pointer]:
+        - paragraph [ref=e59]: 📥 メールを取得・同期
+  - generic [ref=e3]:
+    - banner [ref=e62]:
+      - generic [ref=e65]:
+        - generic [ref=e345]:
+          - img "Running..." [ref=e346]:
+            - img [ref=e347]
+          - button "Stop" [ref=e351] [cursor=pointer]
+        - button "Deploy" [ref=e67] [cursor=pointer]:
+          - generic [ref=e69]: Deploy
+        - button "Main menu" [ref=e71] [cursor=pointer]:
+          - img [ref=e72]
+    - generic [ref=e75]:
+      - heading "🔍 AIマッチング" [level=2] [ref=e240]:
+        - text: 🔍 AIマッチング
+        - generic [ref=e81]:
+          - link "Link to heading":
+            - /url: "#cf8e13b2"
+            - img
+      - generic [ref=e242]:
+        - paragraph [ref=e246]: 案件を選択してください
+        - generic [ref=e248]:
+          - generic [ref=e249]:
+            - generic [ref=e250]: フルスタック（Java / PHP / AWS）/ 要件定義〜製造・テストまで対応可 / SE / PL (2026-04-23)
+            - combobox "Selected フルスタック（Java / PHP / AWS）/ 要件定義〜製造・テストまで対応可 / SE / PL (2026-04-23). 案件を選択してください" [ref=e352]
+          - img "open" [ref=e254]
+      - group [ref=e258]:
+        - generic "keyboard_arrow_down 案件詳細を確認" [ref=e353] [cursor=pointer]:
+          - generic [ref=e260]:
+            - generic [ref=e355]: keyboard_arrow_down
+            - paragraph [ref=e265]: 案件詳細を確認
+        - generic [ref=e269]:
+          - generic [ref=e271]:
+            - paragraph [ref=e276]:
+              - strong [ref=e277]: "案件名:"
+              - text: フルスタック（Java / PHP / AWS）/ 要件定義〜製造・テストまで対応可 / SE / PL
+            - paragraph [ref=e282]:
+              - strong [ref=e283]: "必要スキル:"
+              - text: Java, PHP, AWS
+            - paragraph [ref=e288]:
+              - strong [ref=e289]: "必要経験年数:"
+              - text: None年以上
+            - paragraph [ref=e294]:
+              - strong [ref=e295]: "開始時期:"
+              - text: 不明
+          - generic [ref=e297]:
+            - paragraph [ref=e302]:
+              - strong [ref=e303]: "勤務形態:"
+              - text: 不明
+            - paragraph [ref=e308]:
+              - strong [ref=e309]: "単価/予算:"
+            - paragraph [ref=e314]:
+              - strong [ref=e315]: "勤務地:"
+              - text: 不明
+            - paragraph [ref=e320]:
+              - strong [ref=e321]: "期間:"
+              - text: 不明
+      - separator [ref=e326]
+      - button "🚀 マッチング実行" [active] [ref=e333] [cursor=pointer]:
+        - paragraph [ref=e337]: 🚀 マッチング実行
+      - paragraph [ref=e363]: Claude が 81 名の人材を評価中...

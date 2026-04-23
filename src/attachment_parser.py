@@ -1,4 +1,7 @@
 import io
+import logging
+
+logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
 
 def parse_pdf(data: bytes) -> str:

@@ -1,0 +1,358 @@
+- generic [ref=e2]:
+  - generic [ref=e7]:
+    - button "keyboard_double_arrow_left" [ref=e251] [cursor=pointer]:
+      - generic [ref=e253]: keyboard_double_arrow_left
+    - generic [ref=e11]:
+      - heading "🤝 SES AIマッチング" [level=1] [ref=e15]
+      - separator [ref=e20]
+      - radiogroup "ページ" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]:
+          - radio "📊 ダッシュボード"
+          - paragraph [ref=e29]: 📊 ダッシュボード
+        - generic [ref=e30]:
+          - radio "📋 案件一覧" [checked] [active]
+          - paragraph [ref=e35]: 📋 案件一覧
+        - generic [ref=e36]:
+          - radio "👤 人材一覧"
+          - paragraph [ref=e41]: 👤 人材一覧
+        - generic [ref=e42]:
+          - radio "🔍 マッチング"
+          - paragraph [ref=e47]: 🔍 マッチング
+        - generic [ref=e48]:
+          - radio "⚙️ 設定"
+          - paragraph [ref=e53]: ⚙️ 設定
+      - separator [ref=e58]
+      - heading "メール同期" [level=3] [ref=e62]
+      - button "📥 メールを取得・同期" [ref=e65] [cursor=pointer]:
+        - paragraph [ref=e69]: 📥 メールを取得・同期
+  - generic [ref=e3]:
+    - banner [ref=e72]:
+      - generic [ref=e75]:
+        - button "Deploy" [ref=e77] [cursor=pointer]:
+          - generic [ref=e79]: Deploy
+        - button "Main menu" [ref=e81] [cursor=pointer]:
+          - img [ref=e82]
+    - generic [ref=e85]:
+      - heading "📋 案件一覧" [level=2] [ref=e254]:
+        - text: 📋 案件一覧
+        - generic [ref=e91]:
+          - link "Link to heading":
+            - /url: "#cf8e13b2"
+            - img
+      - group [ref=e256]:
+        - generic "keyboard_arrow_down 🔍 検索・絞り込み" [ref=e257] [cursor=pointer]:
+          - generic [ref=e258]:
+            - generic [ref=e260]: keyboard_arrow_down
+            - paragraph [ref=e263]: 🔍 検索・絞り込み
+        - generic [ref=e267]:
+          - generic [ref=e269]:
+            - generic [ref=e271]:
+              - paragraph [ref=e275]: 案件名
+              - textbox "案件名" [ref=e278]:
+                - /placeholder: ""
+            - generic [ref=e280]:
+              - paragraph [ref=e284]: 必要スキル
+              - textbox "必要スキル" [ref=e287]:
+                - /placeholder: ""
+          - generic [ref=e289]:
+            - generic [ref=e291]:
+              - paragraph [ref=e295]: 勤務形態
+              - generic [ref=e297]:
+                - generic [ref=e298]:
+                  - generic [ref=e299]: 指定なし
+                  - combobox "Selected 指定なし. 勤務形態" [ref=e301]
+                - img "open" [ref=e303]
+            - generic [ref=e306]:
+              - paragraph [ref=e310]: 単価
+              - textbox "単価" [ref=e313]:
+                - /placeholder: ""
+          - generic [ref=e317]:
+            - paragraph [ref=e321]: フリーテキスト（全項目検索）
+            - textbox "フリーテキスト（全項目検索）" [ref=e324]:
+              - /placeholder: ""
+      - paragraph [ref=e325]: 57 件 / 全 57 件
+      - group [ref=e327]:
+        - generic "keyboard_arrow_right 📋 Webアプリエンハンス開発エンジニア ｜ 虎ノ門 常駐 ｜ 2026-04-23" [ref=e328] [cursor=pointer]:
+          - generic [ref=e329]:
+            - generic [ref=e331]: keyboard_arrow_right
+            - paragraph [ref=e334]: 📋 Webアプリエンハンス開発エンジニア ｜ 虎ノ門 常駐 ｜ 2026-04-23
+      - group [ref=e337]:
+        - generic "keyboard_arrow_right 📋 Webシステムのバックエンドサービス支援 ｜ 秋葉原（基本リモート、地方在住可） ｜ 2026-04-23" [ref=e338] [cursor=pointer]:
+          - generic [ref=e339]:
+            - generic [ref=e341]: keyboard_arrow_right
+            - paragraph [ref=e344]: 📋 Webシステムのバックエンドサービス支援 ｜ 秋葉原（基本リモート、地方在住可） ｜ 2026-04-23
+      - group [ref=e347]:
+        - generic "keyboard_arrow_right 📋 アプリケーション保守（西麻布） ｜ 西麻布 ｜ 2026-04-23" [ref=e348] [cursor=pointer]:
+          - generic [ref=e349]:
+            - generic [ref=e351]: keyboard_arrow_right
+            - paragraph [ref=e354]: 📋 アプリケーション保守（西麻布） ｜ 西麻布 ｜ 2026-04-23
+      - group [ref=e357]:
+        - generic "keyboard_arrow_right 📋 C#、ASP.NET会計業務支援Webアプリ開発 ｜ 秋葉原（リモート中心、地方在住可） ｜ 2026-04-23" [ref=e358] [cursor=pointer]:
+          - generic [ref=e359]:
+            - generic [ref=e361]: keyboard_arrow_right
+            - paragraph [ref=e364]: 📋 C#、ASP.NET会計業務支援Webアプリ開発 ｜ 秋葉原（リモート中心、地方在住可） ｜ 2026-04-23
+      - group [ref=e367]:
+        - generic "keyboard_arrow_right 📋 大手各種Webサービス展開企業向けバックオフィス全般の開発業務 ｜ 渋谷 ｜ 2026-04-23" [ref=e368] [cursor=pointer]:
+          - generic [ref=e369]:
+            - generic [ref=e371]: keyboard_arrow_right
+            - paragraph [ref=e374]: 📋 大手各種Webサービス展開企業向けバックオフィス全般の開発業務 ｜ 渋谷 ｜ 2026-04-23
+      - group [ref=e377]:
+        - generic "keyboard_arrow_right 📋 PMO／AWS移行プロジェクト ｜ 北府中、府中（東京都） ｜ 2026-04-23" [ref=e378] [cursor=pointer]:
+          - generic [ref=e379]:
+            - generic [ref=e381]: keyboard_arrow_right
+            - paragraph [ref=e384]: 📋 PMO／AWS移行プロジェクト ｜ 北府中、府中（東京都） ｜ 2026-04-23
+      - group [ref=e387]:
+        - generic "keyboard_arrow_right 📋 クレジット会社向け ネットワーク基盤プロジェクト（国際展示場） ｜ 国際展示場 ｜ 2026-04-23" [ref=e388] [cursor=pointer]:
+          - generic [ref=e389]:
+            - generic [ref=e391]: keyboard_arrow_right
+            - paragraph [ref=e394]: 📋 クレジット会社向け ネットワーク基盤プロジェクト（国際展示場） ｜ 国際展示場 ｜ 2026-04-23
+      - group [ref=e397]:
+        - generic "keyboard_arrow_right 📋 Windowsサーバエンジニア（品川 or 水天宮前） ｜ 品川 or 水天宮前 ｜ 2026-04-23" [ref=e398] [cursor=pointer]:
+          - generic [ref=e399]:
+            - generic [ref=e401]: keyboard_arrow_right
+            - paragraph [ref=e404]: 📋 Windowsサーバエンジニア（品川 or 水天宮前） ｜ 品川 or 水天宮前 ｜ 2026-04-23
+      - group [ref=e407]:
+        - generic "keyboard_arrow_right 📋 Microsoft365設計/構築（飯田橋） ｜ 飯田橋 ｜ 2026-04-23" [ref=e408] [cursor=pointer]:
+          - generic [ref=e409]:
+            - generic [ref=e411]: keyboard_arrow_right
+            - paragraph [ref=e414]: 📋 Microsoft365設計/構築（飯田橋） ｜ 飯田橋 ｜ 2026-04-23
+      - group [ref=e417]:
+        - generic "keyboard_arrow_right 📋 アプリケーション保守（西麻布）- PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23" [ref=e418] [cursor=pointer]:
+          - generic [ref=e419]:
+            - generic [ref=e421]: keyboard_arrow_right
+            - paragraph [ref=e424]: 📋 アプリケーション保守（西麻布）- PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23
+      - group [ref=e427]:
+        - generic "keyboard_arrow_right 📋 データベース保守運用改善業務SE（DB運用保守SE） ｜ 日本橋（最初の2カ月は基本出社） ｜ 2026-04-23" [ref=e428] [cursor=pointer]:
+          - generic [ref=e429]:
+            - generic [ref=e431]: keyboard_arrow_right
+            - paragraph [ref=e434]: 📋 データベース保守運用改善業務SE（DB運用保守SE） ｜ 日本橋（最初の2カ月は基本出社） ｜ 2026-04-23
+      - group [ref=e437]:
+        - generic "keyboard_arrow_right 📋 Webシステムのバックエンドサービス支援 ｜ 秋葉原（リモート中心・地方在住可） ｜ 2026-04-23" [ref=e438] [cursor=pointer]:
+          - generic [ref=e439]:
+            - generic [ref=e441]: keyboard_arrow_right
+            - paragraph [ref=e444]: 📋 Webシステムのバックエンドサービス支援 ｜ 秋葉原（リモート中心・地方在住可） ｜ 2026-04-23
+      - group [ref=e447]:
+        - generic "keyboard_arrow_right 📋 C#、ASP.NET会計業務支援Webアプリ開発 ｜ 秋葉原（基本リモート、地方在住可） ｜ 2026-04-23" [ref=e448] [cursor=pointer]:
+          - generic [ref=e449]:
+            - generic [ref=e451]: keyboard_arrow_right
+            - paragraph [ref=e454]: 📋 C#、ASP.NET会計業務支援Webアプリ開発 ｜ 秋葉原（基本リモート、地方在住可） ｜ 2026-04-23
+      - group [ref=e457]:
+        - generic "keyboard_arrow_right 📋 React／モバイル向けWebアプリケーションのフロントエンド開発 ｜ 外苑前 ｜ 2026-04-23" [ref=e458] [cursor=pointer]:
+          - generic [ref=e459]:
+            - generic [ref=e461]: keyboard_arrow_right
+            - paragraph [ref=e464]: 📋 React／モバイル向けWebアプリケーションのフロントエンド開発 ｜ 外苑前 ｜ 2026-04-23
+      - group [ref=e467]:
+        - generic "keyboard_arrow_right 📋 自社SaaS型ECの開発 ｜ 渋谷駅 ｜ 2026-04-23" [ref=e468] [cursor=pointer]:
+          - generic [ref=e469]:
+            - generic [ref=e471]: keyboard_arrow_right
+            - paragraph [ref=e474]: 📋 自社SaaS型ECの開発 ｜ 渋谷駅 ｜ 2026-04-23
+      - group [ref=e477]:
+        - generic "keyboard_arrow_right 📋 ECサイトのリプレイス支援 ｜ 中野新橋 ｜ 2026-04-23" [ref=e478] [cursor=pointer]:
+          - generic [ref=e479]:
+            - generic [ref=e481]: keyboard_arrow_right
+            - paragraph [ref=e484]: 📋 ECサイトのリプレイス支援 ｜ 中野新橋 ｜ 2026-04-23
+      - group [ref=e487]:
+        - generic "keyboard_arrow_right 📋 Microsoft365設計/構築（飯田橋） ｜ 飯田橋 ｜ 2026-04-23" [ref=e488] [cursor=pointer]:
+          - generic [ref=e489]:
+            - generic [ref=e491]: keyboard_arrow_right
+            - paragraph [ref=e494]: 📋 Microsoft365設計/構築（飯田橋） ｜ 飯田橋 ｜ 2026-04-23
+      - group [ref=e497]:
+        - generic "keyboard_arrow_right 📋 Windowsサーバエンジニア（Windows Server 2022 OS更改） ｜ 品川 or 水天宮前 ｜ 2026-04-23" [ref=e498] [cursor=pointer]:
+          - generic [ref=e499]:
+            - generic [ref=e501]: keyboard_arrow_right
+            - paragraph [ref=e504]: 📋 Windowsサーバエンジニア（Windows Server 2022 OS更改） ｜ 品川 or 水天宮前 ｜ 2026-04-23
+      - group [ref=e507]:
+        - generic "keyboard_arrow_right 📋 アプリケーション保守（西麻布） ｜ 西麻布 ｜ 2026-04-23" [ref=e508] [cursor=pointer]:
+          - generic [ref=e509]:
+            - generic [ref=e511]: keyboard_arrow_right
+            - paragraph [ref=e514]: 📋 アプリケーション保守（西麻布） ｜ 西麻布 ｜ 2026-04-23
+      - group [ref=e517]:
+        - generic "keyboard_arrow_right 📋 大手各種Webサービス展開企業向けバックオフィス全般の開発業務 ｜ 渋谷 ｜ 2026-04-23" [ref=e518] [cursor=pointer]:
+          - generic [ref=e519]:
+            - generic [ref=e521]: keyboard_arrow_right
+            - paragraph [ref=e524]: 📋 大手各種Webサービス展開企業向けバックオフィス全般の開発業務 ｜ 渋谷 ｜ 2026-04-23
+      - group [ref=e527]:
+        - generic "keyboard_arrow_right 📋 CSIRT/SOC業務（金融） ｜ 勝どき（リモート併用） ｜ 2026-04-23" [ref=e528] [cursor=pointer]:
+          - generic [ref=e529]:
+            - generic [ref=e531]: keyboard_arrow_right
+            - paragraph [ref=e534]: 📋 CSIRT/SOC業務（金融） ｜ 勝どき（リモート併用） ｜ 2026-04-23
+      - group [ref=e537]:
+        - generic "keyboard_arrow_right 📋 アプリケーション保守（西麻布）PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23" [ref=e538] [cursor=pointer]:
+          - generic [ref=e539]:
+            - generic [ref=e541]: keyboard_arrow_right
+            - paragraph [ref=e544]: 📋 アプリケーション保守（西麻布）PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23
+      - group [ref=e547]:
+        - generic "keyboard_arrow_right 📋 自社SaaS型ECの開発 ｜ 渋谷駅 ｜ 2026-04-23" [ref=e548] [cursor=pointer]:
+          - generic [ref=e549]:
+            - generic [ref=e551]: keyboard_arrow_right
+            - paragraph [ref=e554]: 📋 自社SaaS型ECの開発 ｜ 渋谷駅 ｜ 2026-04-23
+      - group [ref=e557]:
+        - generic "keyboard_arrow_right 📋 船級海事産業向けシステム保守運用SE ｜ 土気常駐 ｜ 2026-04-23" [ref=e558] [cursor=pointer]:
+          - generic [ref=e559]:
+            - generic [ref=e561]: keyboard_arrow_right
+            - paragraph [ref=e564]: 📋 船級海事産業向けシステム保守運用SE ｜ 土気常駐 ｜ 2026-04-23
+      - group [ref=e567]:
+        - generic "keyboard_arrow_right 📋 Go／自社教育系サービスのバックエンド開発（渋谷） ｜ 渋谷駅 ｜ 2026-04-23" [ref=e568] [cursor=pointer]:
+          - generic [ref=e569]:
+            - generic [ref=e571]: keyboard_arrow_right
+            - paragraph [ref=e574]: 📋 Go／自社教育系サービスのバックエンド開発（渋谷） ｜ 渋谷駅 ｜ 2026-04-23
+      - group [ref=e577]:
+        - generic "keyboard_arrow_right 📋 React／モバイル向けWebアプリケーションのフロントエンド開発 ｜ 外苑前 ｜ 2026-04-23" [ref=e578] [cursor=pointer]:
+          - generic [ref=e579]:
+            - generic [ref=e581]: keyboard_arrow_right
+            - paragraph [ref=e584]: 📋 React／モバイル向けWebアプリケーションのフロントエンド開発 ｜ 外苑前 ｜ 2026-04-23
+      - group [ref=e587]:
+        - generic "keyboard_arrow_right 📋 Windowsサーバエンジニア（品川） ｜ 品川 or 水天宮前 ｜ 2026-04-23" [ref=e588] [cursor=pointer]:
+          - generic [ref=e589]:
+            - generic [ref=e591]: keyboard_arrow_right
+            - paragraph [ref=e594]: 📋 Windowsサーバエンジニア（品川） ｜ 品川 or 水天宮前 ｜ 2026-04-23
+      - group [ref=e597]:
+        - generic "keyboard_arrow_right 📋 アプリケーション保守（西麻布）PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23" [ref=e598] [cursor=pointer]:
+          - generic [ref=e599]:
+            - generic [ref=e601]: keyboard_arrow_right
+            - paragraph [ref=e604]: 📋 アプリケーション保守（西麻布）PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23
+      - group [ref=e607]:
+        - generic "keyboard_arrow_right 📋 CSIRT/SOC業務（金融） ｜ 東京都勝どき（リモート併用） ｜ 2026-04-23" [ref=e608] [cursor=pointer]:
+          - generic [ref=e609]:
+            - generic [ref=e611]: keyboard_arrow_right
+            - paragraph [ref=e614]: 📋 CSIRT/SOC業務（金融） ｜ 東京都勝どき（リモート併用） ｜ 2026-04-23
+      - group [ref=e617]:
+        - generic "keyboard_arrow_right 📋 テスト計画、品質管理支援 ｜ 秋葉原（リモート中心・地方在住可） ｜ 2026-04-23" [ref=e618] [cursor=pointer]:
+          - generic [ref=e619]:
+            - generic [ref=e621]: keyboard_arrow_right
+            - paragraph [ref=e624]: 📋 テスト計画、品質管理支援 ｜ 秋葉原（リモート中心・地方在住可） ｜ 2026-04-23
+      - group [ref=e627]:
+        - generic "keyboard_arrow_right 📋 Webアプリ開発支援／AWS、React（秋葉原） ｜ 秋葉原（基本リモートワーク、地方在住可） ｜ 2026-04-23" [ref=e628] [cursor=pointer]:
+          - generic [ref=e629]:
+            - generic [ref=e631]: keyboard_arrow_right
+            - paragraph [ref=e634]: 📋 Webアプリ開発支援／AWS、React（秋葉原） ｜ 秋葉原（基本リモートワーク、地方在住可） ｜ 2026-04-23
+      - group [ref=e637]:
+        - generic "keyboard_arrow_right 📋 C++、C＃エンジニア（デスクトップ製品開発支援） ｜ 秋葉原（基本リモート、実機作業時は秋葉原出社） ｜ 2026-04-23" [ref=e638] [cursor=pointer]:
+          - generic [ref=e639]:
+            - generic [ref=e641]: keyboard_arrow_right
+            - paragraph [ref=e644]: 📋 C++、C＃エンジニア（デスクトップ製品開発支援） ｜ 秋葉原（基本リモート、実機作業時は秋葉原出社） ｜ 2026-04-23
+      - group [ref=e647]:
+        - generic "keyboard_arrow_right 📋 AIプラットフォーム開発支援（秋葉原） ｜ 秋葉原（基本リモート、地方在住可） ｜ 2026-04-23" [ref=e648] [cursor=pointer]:
+          - generic [ref=e649]:
+            - generic [ref=e651]: keyboard_arrow_right
+            - paragraph [ref=e654]: 📋 AIプラットフォーム開発支援（秋葉原） ｜ 秋葉原（基本リモート、地方在住可） ｜ 2026-04-23
+      - group [ref=e657]:
+        - generic "keyboard_arrow_right 📋 Webシステムのバックエンドサービス支援 ｜ 秋葉原（リモート中心、地方在住可） ｜ 2026-04-23" [ref=e658] [cursor=pointer]:
+          - generic [ref=e659]:
+            - generic [ref=e661]: keyboard_arrow_right
+            - paragraph [ref=e664]: 📋 Webシステムのバックエンドサービス支援 ｜ 秋葉原（リモート中心、地方在住可） ｜ 2026-04-23
+      - group [ref=e667]:
+        - generic "keyboard_arrow_right 📋 クレジット会社向け ネットワーク基盤プロジェクト ｜ 国際展示場 ｜ 2026-04-23" [ref=e668] [cursor=pointer]:
+          - generic [ref=e669]:
+            - generic [ref=e671]: keyboard_arrow_right
+            - paragraph [ref=e674]: 📋 クレジット会社向け ネットワーク基盤プロジェクト ｜ 国際展示場 ｜ 2026-04-23
+      - group [ref=e677]:
+        - generic "keyboard_arrow_right 📋 アプリケーション保守（西麻布）PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23" [ref=e678] [cursor=pointer]:
+          - generic [ref=e679]:
+            - generic [ref=e681]: keyboard_arrow_right
+            - paragraph [ref=e684]: 📋 アプリケーション保守（西麻布）PowerApps・PowerAutomateエンジニア ｜ 西麻布 ｜ 2026-04-23
+      - group [ref=e687]:
+        - generic "keyboard_arrow_right 📋 大手フードデリバリーサイト PM ｜ 新宿 ｜ 2026-04-23" [ref=e688] [cursor=pointer]:
+          - generic [ref=e689]:
+            - generic [ref=e691]: keyboard_arrow_right
+            - paragraph [ref=e694]: 📋 大手フードデリバリーサイト PM ｜ 新宿 ｜ 2026-04-23
+      - group [ref=e697]:
+        - generic "keyboard_arrow_right 📋 PHP／ゲーム開発支援サービス開発 ｜ 渋谷 ｜ 2026-04-23" [ref=e698] [cursor=pointer]:
+          - generic [ref=e699]:
+            - generic [ref=e701]: keyboard_arrow_right
+            - paragraph [ref=e704]: 📋 PHP／ゲーム開発支援サービス開発 ｜ 渋谷 ｜ 2026-04-23
+      - group [ref=e707]:
+        - generic "keyboard_arrow_right 📋 CSIRT/SOC業務（金融） ｜ 東京都勝どき（リモート併用） ｜ 2026-04-23" [ref=e708] [cursor=pointer]:
+          - generic [ref=e709]:
+            - generic [ref=e711]: keyboard_arrow_right
+            - paragraph [ref=e714]: 📋 CSIRT/SOC業務（金融） ｜ 東京都勝どき（リモート併用） ｜ 2026-04-23
+      - group [ref=e717]:
+        - generic "keyboard_arrow_right 📋 Go／自社教育系サービスのバックエンド開発（渋谷） ｜ 渋谷駅 ｜ 2026-04-23" [ref=e718] [cursor=pointer]:
+          - generic [ref=e719]:
+            - generic [ref=e721]: keyboard_arrow_right
+            - paragraph [ref=e724]: 📋 Go／自社教育系サービスのバックエンド開発（渋谷） ｜ 渋谷駅 ｜ 2026-04-23
+      - group [ref=e727]:
+        - generic "keyboard_arrow_right 📋 PMO／AWS移行プロジェクト ｜ 北府中、府中 ｜ 2026-04-23" [ref=e728] [cursor=pointer]:
+          - generic [ref=e729]:
+            - generic [ref=e731]: keyboard_arrow_right
+            - paragraph [ref=e734]: 📋 PMO／AWS移行プロジェクト ｜ 北府中、府中 ｜ 2026-04-23
+      - group [ref=e737]:
+        - generic "keyboard_arrow_right 📋 ECアプリケーション運営企業におけるAndroidエンジニア ｜ 渋谷（基本リモート、月1回出社） ｜ 2026-04-23" [ref=e738] [cursor=pointer]:
+          - generic [ref=e739]:
+            - generic [ref=e741]: keyboard_arrow_right
+            - paragraph [ref=e744]: 📋 ECアプリケーション運営企業におけるAndroidエンジニア ｜ 渋谷（基本リモート、月1回出社） ｜ 2026-04-23
+      - group [ref=e747]:
+        - generic "keyboard_arrow_right 📋 石油会社向けシステム間I/Fリプレイス ｜ 千葉駅 ｜ 2026-04-23" [ref=e748] [cursor=pointer]:
+          - generic [ref=e749]:
+            - generic [ref=e751]: keyboard_arrow_right
+            - paragraph [ref=e754]: 📋 石油会社向けシステム間I/Fリプレイス ｜ 千葉駅 ｜ 2026-04-23
+      - group [ref=e757]:
+        - generic "keyboard_arrow_right 📋 建設業向け見積もり支援システム開発支援 ｜ フルリモート ｜ 2026-04-23" [ref=e758] [cursor=pointer]:
+          - generic [ref=e759]:
+            - generic [ref=e761]: keyboard_arrow_right
+            - paragraph [ref=e764]: 📋 建設業向け見積もり支援システム開発支援 ｜ フルリモート ｜ 2026-04-23
+      - group [ref=e767]:
+        - generic "keyboard_arrow_right 📋 大手求人検索サービスにおけるデータエンジニア ｜ 大崎（基本リモート） ｜ 2026-04-23" [ref=e768] [cursor=pointer]:
+          - generic [ref=e769]:
+            - generic [ref=e771]: keyboard_arrow_right
+            - paragraph [ref=e774]: 📋 大手求人検索サービスにおけるデータエンジニア ｜ 大崎（基本リモート） ｜ 2026-04-23
+      - group [ref=e777]:
+        - generic "keyboard_arrow_right 📋 Go／自社教育系サービスのバックエンド開発（渋谷） ｜ 渋谷駅 ｜ 2026-04-23" [ref=e778] [cursor=pointer]:
+          - generic [ref=e779]:
+            - generic [ref=e781]: keyboard_arrow_right
+            - paragraph [ref=e784]: 📋 Go／自社教育系サービスのバックエンド開発（渋谷） ｜ 渋谷駅 ｜ 2026-04-23
+      - group [ref=e787]:
+        - generic "keyboard_arrow_right 📋 新規リード獲得向けメール大量配信サービスの案内 ｜ 不明 ｜ 2026-04-23" [ref=e788] [cursor=pointer]:
+          - generic [ref=e789]:
+            - generic [ref=e791]: keyboard_arrow_right
+            - paragraph [ref=e794]: 📋 新規リード獲得向けメール大量配信サービスの案内 ｜ 不明 ｜ 2026-04-23
+      - group [ref=e797]:
+        - generic "keyboard_arrow_right 📋 自社SaaS型ECの開発 ｜ 渋谷駅 ｜ 2026-04-23" [ref=e798] [cursor=pointer]:
+          - generic [ref=e799]:
+            - generic [ref=e801]: keyboard_arrow_right
+            - paragraph [ref=e804]: 📋 自社SaaS型ECの開発 ｜ 渋谷駅 ｜ 2026-04-23
+      - group [ref=e807]:
+        - generic "keyboard_arrow_right 📋 ECアプリケーション運営企業におけるMLエンジニア（リード） ｜ 渋谷（基本リモート、月1回出社） ｜ 2026-04-23" [ref=e808] [cursor=pointer]:
+          - generic [ref=e809]:
+            - generic [ref=e811]: keyboard_arrow_right
+            - paragraph [ref=e814]: 📋 ECアプリケーション運営企業におけるMLエンジニア（リード） ｜ 渋谷（基本リモート、月1回出社） ｜ 2026-04-23
+      - group [ref=e817]:
+        - generic "keyboard_arrow_right 📋 SaaS型POSシステム開発 PMO支援 ｜ フルリモート（地方在住不可） ｜ 2026-04-23" [ref=e818] [cursor=pointer]:
+          - generic [ref=e819]:
+            - generic [ref=e821]: keyboard_arrow_right
+            - paragraph [ref=e824]: 📋 SaaS型POSシステム開発 PMO支援 ｜ フルリモート（地方在住不可） ｜ 2026-04-23
+      - group [ref=e827]:
+        - generic "keyboard_arrow_right 📋 AWS／不動産向けAPIシステムインフラ（虎ノ門ヒルズ） ｜ 虎ノ門ヒルズ ｜ 2026-04-23" [ref=e828] [cursor=pointer]:
+          - generic [ref=e829]:
+            - generic [ref=e831]: keyboard_arrow_right
+            - paragraph [ref=e834]: 📋 AWS／不動産向けAPIシステムインフラ（虎ノ門ヒルズ） ｜ 虎ノ門ヒルズ ｜ 2026-04-23
+      - group [ref=e837]:
+        - generic "keyboard_arrow_right 📋 バックオフィス向けサービス運営企業におけるインフラエンジニア ｜ 六本木一丁目 ｜ 2026-04-23" [ref=e838] [cursor=pointer]:
+          - generic [ref=e839]:
+            - generic [ref=e841]: keyboard_arrow_right
+            - paragraph [ref=e844]: 📋 バックオフィス向けサービス運営企業におけるインフラエンジニア ｜ 六本木一丁目 ｜ 2026-04-23
+      - group [ref=e847]:
+        - generic "keyboard_arrow_right 📋 基盤エンジニア（Windows,Vmware,Oracle） ｜ 木場 ｜ 2026-04-23" [ref=e848] [cursor=pointer]:
+          - generic [ref=e849]:
+            - generic [ref=e851]: keyboard_arrow_right
+            - paragraph [ref=e854]: 📋 基盤エンジニア（Windows,Vmware,Oracle） ｜ 木場 ｜ 2026-04-23
+      - group [ref=e857]:
+        - generic "keyboard_arrow_right 📋 Java／SpringBoot基幹システム機能改善・保守運用業務支援（秋葉原） ｜ 秋葉原（基本リモート、入場時は秋葉原または池袋出社） ｜ 2026-04-23" [ref=e858] [cursor=pointer]:
+          - generic [ref=e859]:
+            - generic [ref=e861]: keyboard_arrow_right
+            - paragraph [ref=e864]: 📋 Java／SpringBoot基幹システム機能改善・保守運用業務支援（秋葉原） ｜ 秋葉原（基本リモート、入場時は秋葉原または池袋出社） ｜ 2026-04-23
+      - group [ref=e867]:
+        - generic "keyboard_arrow_right 📋 福祉向けSaaSサービスにおけるRubyエンジニア ｜ フルリモート ｜ 2026-04-23" [ref=e868] [cursor=pointer]:
+          - generic [ref=e869]:
+            - generic [ref=e871]: keyboard_arrow_right
+            - paragraph [ref=e874]: 📋 福祉向けSaaSサービスにおけるRubyエンジニア ｜ フルリモート ｜ 2026-04-23
+      - group [ref=e877]:
+        - generic "keyboard_arrow_right 📋 某小売業様向けサーバー移行PM募集 ｜ 基本フルリモート（初日および有事の際は六本木一丁目駅に出社） ｜ 2026-04-23" [ref=e878] [cursor=pointer]:
+          - generic [ref=e879]:
+            - generic [ref=e881]: keyboard_arrow_right
+            - paragraph [ref=e884]: 📋 某小売業様向けサーバー移行PM募集 ｜ 基本フルリモート（初日および有事の際は六本木一丁目駅に出社） ｜ 2026-04-23
+      - group [ref=e887]:
+        - generic "keyboard_arrow_right 📋 Java／SpringBoot開発支援／機能改善／保守運用（秋葉原） ｜ 秋葉原（基本リモート、入場時は秋葉原または池袋に出社） ｜ 2026-04-23" [ref=e888] [cursor=pointer]:
+          - generic [ref=e889]:
+            - generic [ref=e891]: keyboard_arrow_right
+            - paragraph [ref=e894]: 📋 Java／SpringBoot開発支援／機能改善／保守運用（秋葉原） ｜ 秋葉原（基本リモート、入場時は秋葉原または池袋に出社） ｜ 2026-04-23
