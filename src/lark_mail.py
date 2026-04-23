@@ -14,9 +14,12 @@ LARK_APP_SECRET = os.getenv("LARK_APP_SECRET", "")
 LARK_MAILBOX_USER = os.getenv("IMAP_USER", "")
 
 _token_cache: dict = {"token": None, "expires_at": 0.0}
+# Note: not thread-safe; assumes single-threaded Streamlit execution
 
 
 def get_app_access_token() -> str:
+    if not LARK_APP_ID or not LARK_APP_SECRET:
+        raise RuntimeError("LARK_APP_ID and LARK_APP_SECRET must be set in environment")
     now = time.time()
     if _token_cache["token"] and now < _token_cache["expires_at"]:
         return _token_cache["token"]
