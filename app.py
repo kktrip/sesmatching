@@ -32,6 +32,84 @@ from src.ai_processor import classify_and_extract
 from src.matcher import match_candidates
 
 
+def _inject_css():
+    st.markdown("""
+    <style>
+    /* ── エクスパンダー（カード） ── */
+    [data-testid="stExpander"] {
+        border-left: 4px solid #EAB308;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        margin-bottom: 8px;
+        background: #FFFFFF;
+    }
+    [data-testid="stExpander"]:hover {
+        box-shadow: 0 3px 8px rgba(234,179,8,0.2);
+    }
+
+    /* ── メトリクス ── */
+    [data-testid="stMetric"] {
+        background: #FFFFFF;
+        border-top: 3px solid #EAB308;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* ── ボタン ── */
+    [data-testid="stButton"] > button {
+        background-color: #EAB308 !important;
+        color: #1C1917 !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+    }
+    [data-testid="stButton"] > button:hover {
+        background-color: #CA8A04 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* ── プライマリボタン（マッチング実行など） ── */
+    [data-testid="stButton"] > button[kind="primary"] {
+        background-color: #EAB308 !important;
+        color: #1C1917 !important;
+    }
+    [data-testid="stButton"] > button[kind="primary"]:hover {
+        background-color: #CA8A04 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* ── ページヘッダー ── */
+    h1 {
+        border-bottom: 2px solid #EAB308;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+    }
+
+    /* ── テキストインプット フォーカス ── */
+    [data-testid="stTextInput"] input:focus {
+        border-color: #EAB308 !important;
+        box-shadow: 0 0 0 2px rgba(234,179,8,0.25) !important;
+    }
+
+    /* ── セレクトボックス フォーカス ── */
+    [data-testid="stSelectbox"] > div:focus-within {
+        border-color: #EAB308 !important;
+    }
+
+    /* ── サイドバータイトル ── */
+    [data-testid="stSidebar"] h1 {
+        border-bottom: 2px solid #EAB308;
+    }
+
+    /* ── プログレスバー ── */
+    [data-testid="stProgressBar"] > div > div {
+        background-color: #EAB308 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 def _process_one_email(em):
     """Parse attachments and classify via Claude. Returns (em, result, attachment_text)."""
     attachment_text = ""
@@ -47,6 +125,8 @@ st.set_page_config(
     page_icon="🤝",
     layout="wide",
 )
+
+_inject_css()
 
 # ────────────────────────────────────────────
 # Sidebar
