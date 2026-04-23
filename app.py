@@ -129,12 +129,16 @@ def _inject_css():
 
     /* ── Sidebar radio items (VS Code style menu) ── */
     [data-testid="stSidebar"] label[data-testid="stWidgetLabel"] {
-        display: none;
+        display: none !important;
     }
 
     /* ラジオボタンの○とその装飾要素を非表示 */
     [data-testid="stSidebar"] .stRadio input[type="radio"] {
-        display: none !important;
+        position: absolute !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        pointer-events: none !important;
     }
 
     [data-testid="stSidebar"] .stRadio label > div:first-child {
