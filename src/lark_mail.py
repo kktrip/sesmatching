@@ -67,8 +67,16 @@ def get_latest_reply_lark_id(
     # 1. 常に最新の返信メールを検索
     reply_items = _search_messages(token, f"Re: {subject}")
     if reply_items:
-        reply_items.sort(key=lambda x: x.get("date", 0), reverse=True)
-        return reply_items[0]["message_id"]
+        # 送信者でフィルター（異なる会社の同件名メールを除外）
+        sender_lower = sender.lower()
+        filtered = [
+            item for item in reply_items
+            if item.get("from", {}).get("mail_address", "").lower() in sender_lower
+            or sender_lower in item.get("from", {}).get("mail_address", "").lower()
+        ]
+        candidates = filtered if filtered else reply_items
+        candidates.sort(key=lambda x: x.get("date", 0), reverse=True)
+        return candidates[0]["message_id"]
 
     # 2. 返信なし → キャッシュ済みIDがあれば使用
     if cached_lark_id:

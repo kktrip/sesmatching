@@ -19,7 +19,9 @@ def test_get_app_access_token_returns_token():
     lark_mail._token_cache["token"] = None
     lark_mail._token_cache["expires_at"] = 0
 
-    with patch("src.lark_mail.requests.post", return_value=make_token_response("tok123")) as mock_post:
+    with patch("src.lark_mail.LARK_APP_ID", "test_app_id"), \
+         patch("src.lark_mail.LARK_APP_SECRET", "test_app_secret"), \
+         patch("src.lark_mail.requests.post", return_value=make_token_response("tok123")) as mock_post:
         token = lark_mail.get_app_access_token()
 
     assert token == "tok123"
@@ -43,7 +45,9 @@ def test_get_app_access_token_refreshes_expired_cache():
     lark_mail._token_cache["token"] = "old_token"
     lark_mail._token_cache["expires_at"] = time.time() - 1  # 期限切れ
 
-    with patch("src.lark_mail.requests.post", return_value=make_token_response("new_token")):
+    with patch("src.lark_mail.LARK_APP_ID", "test_app_id"), \
+         patch("src.lark_mail.LARK_APP_SECRET", "test_app_secret"), \
+         patch("src.lark_mail.requests.post", return_value=make_token_response("new_token")):
         token = lark_mail.get_app_access_token()
 
     assert token == "new_token"
@@ -58,7 +62,9 @@ def test_get_app_access_token_raises_on_lark_error():
     mock_resp.raise_for_status = MagicMock()
     mock_resp.json.return_value = {"code": 99991663, "msg": "invalid app_id"}
 
-    with patch("src.lark_mail.requests.post", return_value=mock_resp):
+    with patch("src.lark_mail.LARK_APP_ID", "test_app_id"), \
+         patch("src.lark_mail.LARK_APP_SECRET", "test_app_secret"), \
+         patch("src.lark_mail.requests.post", return_value=mock_resp):
         with pytest.raises(RuntimeError, match="Lark auth error"):
             lark_mail.get_app_access_token()
 
