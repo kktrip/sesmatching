@@ -5,7 +5,7 @@ IMAP接続デバッグスクリプト
 import imaplib
 import ssl
 
-HOST = "irohamaru-works.sakura.ne.jp"
+HOST = "www764.sakura.ne.jp"
 PORT_SSL = 993
 PORT_STARTTLS = 143
 USER_FULL = "info@falcs.jp"
