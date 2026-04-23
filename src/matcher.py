@@ -110,15 +110,18 @@ def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
         scored = sorted(candidates, key=lambda c: _keyword_score(project_data, c), reverse=True)
         candidates = scored[:20]
 
-    # Stage B: compress skill sheets to relevant excerpts
+    # Stage B: compress skill sheets to relevant excerpts (create local copies to avoid input mutation)
     required_skills = project_data.get("required_skills", [])
-    for c in candidates:
-        c["_compressed_excerpt"] = _extract_relevant_excerpt(
+    candidates = [
+        {**c, "_compressed_excerpt": _extract_relevant_excerpt(
             c.get("skill_sheet_text") or "", required_skills
-        )
+        )}
+        for c in candidates
+    ]
 
-    # Stage A-1: Haiku pre-screening → top 10
-    candidates = _haiku_prescreening(project_data, candidates)
+    # Stage A-1: Haiku pre-screening → top 10 (skip if ≤ 10 candidates)
+    if len(candidates) > 10:
+        candidates = _haiku_prescreening(project_data, candidates)
 
     # Stage A-2: Sonnet detailed evaluation
     candidate_summaries = []

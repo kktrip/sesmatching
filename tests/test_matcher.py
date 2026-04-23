@@ -212,6 +212,7 @@ def test_match_candidates_sonnet_uses_max_tokens_2000():
         mock_get_client.return_value.messages.create.side_effect = mock_create
         match_candidates(project_data, candidates)
 
-    sonnet_call = call_args_list[1]
+    # Only Sonnet is called (3 candidates ≤ 10, Haiku skipped)
+    sonnet_call = call_args_list[0]
     assert sonnet_call["max_tokens"] == 2000
     assert sonnet_call["model"] == "claude-sonnet-4-6"
