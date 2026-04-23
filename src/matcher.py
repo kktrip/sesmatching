@@ -53,6 +53,46 @@ def _keyword_score(project_data: dict, candidate: dict) -> int:
     return score
 
 
+def _haiku_prescreening(project_data: dict, candidates: list[dict]) -> list[dict]:
+    """Pre-screen candidates with Haiku; return top-10 by skill score."""
+    required_skills = project_data.get("required_skills", [])
+
+    candidate_summaries = [
+        {
+            "id": c["id"],
+            "name": c["name"],
+            "skills": (c.get("data") or {}).get("skills", []),
+            "skill_excerpt": c.get("_compressed_excerpt", ""),
+        }
+        for c in candidates
+    ]
+
+    prompt = f"""あなたはSES案件マッチングの専門家です。
+以下の案件必須スキルに対して、各人材のスキル適合度を0-100で評価してください。
+
+【案件の必須スキル】
+{json.dumps(required_skills, ensure_ascii=False)}
+
+【人材リスト】
+{json.dumps(candidate_summaries, ensure_ascii=False)}
+
+以下のJSON配列のみで回答してください（説明文不要）:
+[{{"id": 人材ID, "score": スキル適合度(0-100)}}]"""
+
+    try:
+        response = _get_client().messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        scores = _parse_json_response(response.content[0].text)
+        score_map = {s["id"]: s["score"] for s in scores}
+        ranked = sorted(candidates, key=lambda c: score_map.get(c["id"], 0), reverse=True)
+        return ranked[:10]
+    except Exception:
+        return candidates
+
+
 def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
     """
     Match a project against candidates and return top 5 ranked results.
