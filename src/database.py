@@ -99,7 +99,9 @@ def get_all_projects():
 def get_all_candidates():
     with get_connection() as conn:
         return conn.execute(
-            "SELECT c.*, e.sender, e.received_at FROM candidates c LEFT JOIN emails e ON c.email_id = e.id ORDER BY c.created_at DESC"
+            "SELECT c.*, e.sender, e.received_at, e.body as email_body "
+            "FROM candidates c LEFT JOIN emails e ON c.email_id = e.id "
+            "ORDER BY c.created_at DESC"
         ).fetchall()
 
 
