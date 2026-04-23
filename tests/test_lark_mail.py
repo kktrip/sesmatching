@@ -233,3 +233,15 @@ def test_search_messages_raises_on_empty_mailbox_user():
     with patch("src.lark_mail.LARK_MAILBOX_USER", ""):
         with pytest.raises(RuntimeError, match="IMAP_USER"):
             lark_mail._search_messages("some_token", "subject")
+
+
+def test_get_latest_reply_raises_on_empty_mailbox_user():
+    import src.lark_mail as lark_mail
+    lark_mail._token_cache["token"] = "tok"
+    lark_mail._token_cache["expires_at"] = time.time() + 3600
+
+    with patch("src.lark_mail.LARK_MAILBOX_USER", ""):
+        with pytest.raises(RuntimeError, match="IMAP_USER"):
+            lark_mail.get_latest_reply_lark_id(
+                email_id=1, subject="案件A", sender="sender@example.com", cached_lark_id=None
+            )
