@@ -742,8 +742,8 @@ def _render_reply_button(
                     cached_lark_id=cached_lark_id,
                 )
                 st.session_state[url_key] = get_lark_url(lark_id, subject)
-            except Exception as e:
-                st.warning(f"Lark APIへの接続に失敗しました。受信箱から検索してください。")
+            except Exception:
+                st.warning("Lark APIへの接続に失敗しました。受信箱から検索してください。")
                 st.session_state[url_key] = get_lark_url(None, subject)
 
     if url_key in st.session_state:
