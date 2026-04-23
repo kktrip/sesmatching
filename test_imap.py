@@ -1,59 +1,107 @@
 """
-IMAP接続デバッグスクリプト
+IMAP / POP3接続デバッグスクリプト
 実行: python3 test_imap.py
 """
 import imaplib
-import ssl
+import poplib
+import base64
 
-HOST = "www764.sakura.ne.jp"
-PORT_SSL = 993
-PORT_STARTTLS = 143
+HOST = "irohamaru-works.sakura.ne.jp"
 USER_FULL = "info@falcs.jp"
 USER_SHORT = "info"
 PASSWORD = "pC5SWv3tp9U5"
 
 
-def try_login(conn, user, password, label):
+def imap_auth_plain(host, port, user, password, use_ssl=True):
+    """AUTH=PLAINで認証を試みる"""
     try:
-        conn.login(user, password)
-        print(f"  ✅ ログイン成功 [{label}]")
-        conn.logout()
-        return True
-    except imaplib.IMAP4.error as e:
-        print(f"  ❌ ログイン失敗 [{label}]: {e}")
+        conn = imaplib.IMAP4_SSL(host, port) if use_ssl else imaplib.IMAP4(host, port)
+        if not use_ssl:
+            conn.starttls()
+        auth_str = f"\x00{user}\x00{password}"
+        encoded = base64.b64encode(auth_str.encode()).decode()
+        typ, data = conn.authenticate("PLAIN", lambda x: encoded.encode())
+        if typ == "OK":
+            print(f"  ✅ AUTH=PLAIN成功 [user={user}]")
+            conn.logout()
+            return True
+        else:
+            print(f"  ❌ AUTH=PLAIN失敗 [user={user}]: {data}")
+            return False
+    except Exception as e:
+        print(f"  ❌ AUTH=PLAINエラー [user={user}]: {e}")
         return False
 
 
 print("=" * 50)
-print("IMAP接続デバッグ")
+print("メールサーバー接続デバッグ")
 print("=" * 50)
 
-# 1. SSL (port 993)
-print(f"\n[1] SSL接続 (port {PORT_SSL})")
+# 1. IMAP SSL (port 993) - LOGIN
+print("\n[1] IMAP SSL port 993 - LOGIN")
 try:
-    conn = imaplib.IMAP4_SSL(HOST, PORT_SSL)
+    conn = imaplib.IMAP4_SSL(HOST, 993)
     print("  接続: OK")
-    cap = conn.capability()
-    print(f"  Capability: {cap[1]}")
     for user in [USER_FULL, USER_SHORT]:
-        c = imaplib.IMAP4_SSL(HOST, PORT_SSL)
-        if try_login(c, user, PASSWORD, f"user={user}"):
+        try:
+            c = imaplib.IMAP4_SSL(HOST, 993)
+            c.login(user, PASSWORD)
+            print(f"  ✅ ログイン成功 [user={user}]")
+            c.logout()
             break
+        except imaplib.IMAP4.error as e:
+            print(f"  ❌ ログイン失敗 [user={user}]: {e}")
 except Exception as e:
-    print(f"  接続失敗: {type(e).__name__}: {e}")
+    print(f"  接続失敗: {e}")
 
-# 2. STARTTLS (port 143)
-print(f"\n[2] STARTTLS接続 (port {PORT_STARTTLS})")
+# 2. IMAP SSL (port 993) - AUTH=PLAIN
+print("\n[2] IMAP SSL port 993 - AUTH=PLAIN")
+for user in [USER_FULL, USER_SHORT]:
+    if imap_auth_plain(HOST, 993, user, PASSWORD, use_ssl=True):
+        break
+
+# 3. IMAP STARTTLS (port 143) - AUTH=PLAIN
+print("\n[3] IMAP STARTTLS port 143 - AUTH=PLAIN")
+for user in [USER_FULL, USER_SHORT]:
+    if imap_auth_plain(HOST, 143, user, PASSWORD, use_ssl=False):
+        break
+
+# 4. POP3 SSL (port 995)
+print("\n[4] POP3 SSL port 995")
 try:
-    conn = imaplib.IMAP4(HOST, PORT_STARTTLS)
-    conn.starttls()
+    pop = poplib.POP3_SSL(HOST, 995)
     print("  接続: OK")
     for user in [USER_FULL, USER_SHORT]:
-        c = imaplib.IMAP4(HOST, PORT_STARTTLS)
-        c.starttls()
-        if try_login(c, user, PASSWORD, f"user={user}"):
+        try:
+            pop2 = poplib.POP3_SSL(HOST, 995)
+            pop2.user(user)
+            pop2.pass_(PASSWORD)
+            count, size = pop2.stat()
+            print(f"  ✅ ログイン成功 [user={user}] メール数: {count}")
+            pop2.quit()
             break
+        except poplib.error_proto as e:
+            print(f"  ❌ ログイン失敗 [user={user}]: {e}")
 except Exception as e:
-    print(f"  接続失敗: {type(e).__name__}: {e}")
+    print(f"  接続失敗: {e}")
+
+# 5. POP3 (port 110)
+print("\n[5] POP3 port 110")
+try:
+    pop = poplib.POP3(HOST, 110)
+    print("  接続: OK")
+    for user in [USER_FULL, USER_SHORT]:
+        try:
+            pop2 = poplib.POP3(HOST, 110)
+            pop2.user(user)
+            pop2.pass_(PASSWORD)
+            count, size = pop2.stat()
+            print(f"  ✅ ログイン成功 [user={user}] メール数: {count}")
+            pop2.quit()
+            break
+        except poplib.error_proto as e:
+            print(f"  ❌ ログイン失敗 [user={user}]: {e}")
+except Exception as e:
+    print(f"  接続失敗: {e}")
 
 print("\n" + "=" * 50)
