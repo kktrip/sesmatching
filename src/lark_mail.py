@@ -39,3 +39,58 @@ def get_app_access_token() -> str:
     _token_cache["token"] = token
     _token_cache["expires_at"] = now + expire - 300
     return token
+
+
+def _search_messages(token: str, subject: str) -> list:
+    mailbox_id = urllib.parse.quote(LARK_MAILBOX_USER, safe="")
+    resp = requests.get(
+        f"{LARK_BASE_URL}/mail/v1/user_mailboxes/{mailbox_id}/messages",
+        headers={"Authorization": f"Bearer {token}"},
+        params={"subject": subject, "page_size": 20},
+        timeout=10,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    if data.get("code") != 0:
+        return []
+    return data.get("data", {}).get("items", [])
+
+
+def get_latest_reply_lark_id(
+    email_id: int,
+    subject: str,
+    sender: str,
+    cached_lark_id: str | None,
+) -> str | None:
+    token = get_app_access_token()
+
+    # 1. 常に最新の返信メールを検索
+    reply_items = _search_messages(token, f"Re: {subject}")
+    if reply_items:
+        reply_items.sort(key=lambda x: x.get("date", 0), reverse=True)
+        return reply_items[0]["message_id"]
+
+    # 2. 返信なし → キャッシュ済みIDがあれば使用
+    if cached_lark_id:
+        return cached_lark_id
+
+    # 3. 元メールを検索してキャッシュ
+    original_items = _search_messages(token, subject)
+    if original_items:
+        for item in original_items:
+            item_sender = item.get("from", {}).get("mail_address", "")
+            if item_sender and item_sender.lower() in sender.lower():
+                lark_id = item["message_id"]
+                update_lark_message_id(email_id, lark_id)
+                return lark_id
+        lark_id = original_items[0]["message_id"]
+        update_lark_message_id(email_id, lark_id)
+        return lark_id
+
+    return None
+
+
+def get_lark_url(lark_message_id: str | None, subject: str) -> str:
+    if lark_message_id:
+        return f"{LARK_TENANT}/mail/detail/{lark_message_id}"
+    return f"{LARK_TENANT}/mail/?q={urllib.parse.quote(subject)}"
