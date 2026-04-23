@@ -1006,6 +1006,13 @@ def show_candidates():
             if email_body:
                 with st.expander("📧 メール全文を見る"):
                     st.text(email_body)
+            _render_reply_button(
+                email_id=c["email_id"] if "email_id" in c.keys() else None,
+                subject=c["email_subject"] if "email_subject" in c.keys() else c["name"],
+                sender=c["sender"] if "sender" in c.keys() else None,
+                cached_lark_id=c["lark_message_id"] if "lark_message_id" in c.keys() else None,
+                key=f"candidate_{c['id']}",
+            )
 
 
 def show_matching():
