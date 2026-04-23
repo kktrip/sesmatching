@@ -52,8 +52,9 @@ def init_db():
         # マイグレーション: lark_message_id カラムを追加（既存DB対応）
         try:
             conn.execute("ALTER TABLE emails ADD COLUMN lark_message_id TEXT")
-        except Exception:
-            pass  # カラムが既に存在する場合はスキップ
+        except sqlite3.OperationalError as e:
+            if "duplicate column name" not in str(e):
+                raise
 
 
 def insert_email(message_id, subject, sender, received_at, body, email_type):
@@ -187,7 +188,9 @@ def candidate_exists(name: str, sender: str) -> bool:
 
 def update_lark_message_id(email_id: int, lark_message_id: str) -> None:
     with get_connection() as conn:
-        conn.execute(
+        cursor = conn.execute(
             "UPDATE emails SET lark_message_id=? WHERE id=?",
             (lark_message_id, email_id),
         )
+        if cursor.rowcount == 0:
+            raise ValueError(f"email id {email_id} not found")
