@@ -947,8 +947,9 @@ def show_candidates():
 
     filtered = [(c, data) for c, data in candidates_with_data if _match_candidate(c, data)]
     st.caption(f"{len(filtered)} 件 / 全 {len(candidates)} 件")
+    paginated = _paginate(filtered, "candidates")
 
-    for c, data in filtered:
+    for c, data in paginated:
         skills = ", ".join(data.get("skills", []))
         with st.expander(f"👤 {c['name']}　｜　経験 {data.get('experience_years', '?')}年　｜　{c['created_at'][:10]}"):
             col1, col2 = st.columns(2)
