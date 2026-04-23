@@ -167,3 +167,51 @@ def test_get_lark_url_fallback_without_message_id():
     url = get_lark_url(None, "案件A テスト")
     assert "ajps62h9zjoo.jp.larksuite.com/mail/" in url
     assert "%E6%A1%88%E4%BB%B6" in url  # URL-encoded "案件"
+
+
+def test_get_latest_reply_returns_none_on_token_error():
+    import src.lark_mail as lark_mail
+    lark_mail._token_cache["token"] = None
+    lark_mail._token_cache["expires_at"] = 0
+
+    with patch("src.lark_mail.LARK_APP_ID", "test_app_id"), \
+         patch("src.lark_mail.LARK_APP_SECRET", "test_app_secret"), \
+         patch("src.lark_mail.requests.post", side_effect=RuntimeError("network error")):
+        result = lark_mail.get_latest_reply_lark_id(
+            email_id=1, subject="案件A", sender="sender@example.com", cached_lark_id="cached_id"
+        )
+    assert result is None
+
+
+def test_get_latest_reply_returns_cached_id_on_reply_search_error():
+    import src.lark_mail as lark_mail
+    import requests as req
+    lark_mail._token_cache["token"] = "tok"
+    lark_mail._token_cache["expires_at"] = time.time() + 3600
+
+    with patch("src.lark_mail.requests.get", side_effect=req.exceptions.RequestException("400 Bad Request")):
+        result = lark_mail.get_latest_reply_lark_id(
+            email_id=1, subject="案件A", sender="sender@example.com", cached_lark_id="cached_id_123"
+        )
+    assert result == "cached_id_123"
+
+
+def test_get_latest_reply_returns_none_on_original_search_error():
+    import src.lark_mail as lark_mail
+    import requests as req
+    lark_mail._token_cache["token"] = "tok"
+    lark_mail._token_cache["expires_at"] = time.time() + 3600
+
+    call_count = [0]
+
+    def side_effect(*args, **kwargs):
+        call_count[0] += 1
+        if call_count[0] == 1:
+            return make_empty_response()  # reply search returns empty
+        raise req.exceptions.RequestException("400 Bad Request")  # original search fails
+
+    with patch("src.lark_mail.requests.get", side_effect=side_effect):
+        result = lark_mail.get_latest_reply_lark_id(
+            email_id=1, subject="案件A", sender="sender@example.com", cached_lark_id=None
+        )
+    assert result is None

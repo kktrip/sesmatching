@@ -69,7 +69,7 @@ def get_latest_reply_lark_id(
 
     try:
         reply_items = _search_messages(token, f"Re: {subject}")
-    except Exception:
+    except requests.exceptions.RequestException:
         return cached_lark_id  # API失敗 → キャッシュかNone
 
     if reply_items:
@@ -91,7 +91,7 @@ def get_latest_reply_lark_id(
     # 3. 元メールを検索してキャッシュ
     try:
         original_items = _search_messages(token, subject)
-    except Exception:
+    except requests.exceptions.RequestException:
         return None
 
     if original_items:
