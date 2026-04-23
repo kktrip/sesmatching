@@ -14,3 +14,4 @@ def test_get_candidate_by_id_includes_email_fields(tmp_path, monkeypatch):
     assert row["email_subject"] == "件名テスト"
     assert row["sender"] == "from@example.com"
     assert row["lark_message_id"] is None
+    assert row["name"] == "山田太郎"
