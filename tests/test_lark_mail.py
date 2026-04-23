@@ -252,10 +252,12 @@ def test_get_latest_reply_falls_back_to_unfiltered_when_sender_mismatch():
     lark_mail._token_cache["token"] = "tok"
     lark_mail._token_cache["expires_at"] = time.time() + 3600
 
-    # All replies are from a different sender than the one we're looking for
+    # No reply matches sender "original@example.com" → filtered list is empty → fallback to all replies.
+    # Three items at different dates: fallback must sort descending and return newest.
     replies = [
-        make_item("reply_a", "Re: 案件B", "other@example.com", date=100),
-        make_item("reply_b", "Re: 案件B", "other@example.com", date=999),
+        make_item("reply_newest", "Re: 案件B", "other@example.com", date=999),
+        make_item("reply_mid",    "Re: 案件B", "other@example.com", date=500),
+        make_item("reply_oldest", "Re: 案件B", "other@example.com", date=100),
     ]
 
     with patch("src.lark_mail.requests.get", return_value=make_messages_response(replies)):
@@ -263,5 +265,5 @@ def test_get_latest_reply_falls_back_to_unfiltered_when_sender_mismatch():
             email_id=1, subject="案件B", sender="original@example.com", cached_lark_id=None
         )
 
-    # Should fall back to newest of unfiltered list
-    assert result == "reply_b"
+    # All senders mismatch → fallback to unfiltered list → newest (date=999) wins.
+    assert result == "reply_newest"
