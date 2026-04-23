@@ -920,6 +920,13 @@ def show_projects():
             if email_body:
                 with st.expander("📧 メール全文を見る"):
                     st.text(email_body)
+            _render_reply_button(
+                email_id=p["email_id"] if "email_id" in p.keys() else None,
+                subject=p["email_subject"] if "email_subject" in p.keys() else p["title"],
+                sender=p["sender"] if "sender" in p.keys() else None,
+                cached_lark_id=p["lark_message_id"] if "lark_message_id" in p.keys() else None,
+                key=f"project_{p['id']}",
+            )
 
 
 def show_candidates():
