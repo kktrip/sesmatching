@@ -10,7 +10,7 @@ PORT_SSL = 993
 PORT_STARTTLS = 143
 USER_FULL = "info@falcs.jp"
 USER_SHORT = "info"
-PASSWORD = "u7XHXpshyYfm"
+PASSWORD = "pC5SWv3tp9U5"
 
 
 def try_login(conn, user, password, label):
