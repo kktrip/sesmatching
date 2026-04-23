@@ -232,8 +232,9 @@ def show_projects():
         with col3:
             q_free = st.text_input("フリーテキスト（全項目検索）", key="proj_q_free")
 
-    def _match_project(p):
-        data = json.loads(p["data"])
+    projects_with_data = [(p, json.loads(p["data"])) for p in projects]
+
+    def _match_project(p, data):
         title_str = p["title"].lower()
         skills_str = " ".join(data.get("required_skills", [])).lower()
         work_style_str = (data.get("work_style") or "").lower()
@@ -244,7 +245,7 @@ def show_projects():
             return False
         if q_skill and q_skill.lower() not in skills_str:
             return False
-        if q_work_style != "指定なし" and q_work_style.lower() not in work_style_str:
+        if q_work_style != "指定なし" and q_work_style not in work_style_str:
             return False
         if q_budget and q_budget.lower() not in budget_str:
             return False
@@ -252,11 +253,10 @@ def show_projects():
             return False
         return True
 
-    filtered = [p for p in projects if _match_project(p)]
+    filtered = [(p, data) for p, data in projects_with_data if _match_project(p, data)]
     st.caption(f"{len(filtered)} 件 / 全 {len(projects)} 件")
 
-    for p in filtered:
-        data = json.loads(p["data"])
+    for p, data in filtered:
         skills = ", ".join(data.get("required_skills", []))
         with st.expander(f"📋 {p['title']}　｜　{data.get('location', '勤務地不明')}　｜　{p['created_at'][:10]}"):
             col1, col2 = st.columns(2)
