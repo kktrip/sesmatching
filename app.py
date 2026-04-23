@@ -868,7 +868,6 @@ def show_projects():
         return True
 
     filtered = [(p, data) for p, data in projects_with_data if _match_project(p, data)]
-    st.caption(f"{len(filtered)} 件 / 全 {len(projects)} 件")
     paginated = _paginate(filtered, "projects")
 
     for p, data in paginated:
@@ -946,7 +945,6 @@ def show_candidates():
         return True
 
     filtered = [(c, data) for c, data in candidates_with_data if _match_candidate(c, data)]
-    st.caption(f"{len(filtered)} 件 / 全 {len(candidates)} 件")
     paginated = _paginate(filtered, "candidates")
 
     for c, data in paginated:
