@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -21,12 +22,23 @@ from src.database import (
     insert_project,
     insert_candidate,
     insert_match,
-    email_exists,
+    get_all_message_ids,
+    project_exists,
+    candidate_exists,
 )
 from src.email_fetcher import fetch_emails
 from src.attachment_parser import parse_attachment
 from src.ai_processor import classify_and_extract
 from src.matcher import match_candidates
+
+
+def _process_one_email(em):
+    """Parse attachments and classify via Claude. Returns (em, result, attachment_text)."""
+    attachment_text = ""
+    for att in em.get("attachments", []):
+        attachment_text += parse_attachment(att["filename"], att["data"]) + "\n"
+    result = classify_and_extract(em["subject"], em["body"], attachment_text)
+    return em, result, attachment_text
 
 init_db()
 
@@ -52,35 +64,56 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("メール同期")
     if st.button("📥 メールを取得・同期", use_container_width=True):
-        with st.spinner("メールを取得中..."):
-            try:
-                emails = fetch_emails(max_count=100)
+        try:
+            status = st.empty()
+
+            # Step 1: load known IDs from DB (one query, not N queries)
+            status.info("DBから既知メールIDを取得中...")
+            known_ids = get_all_message_ids()
+
+            # Step 2: IMAP two-phase fetch (headers → filter → full body for new only)
+            status.info(f"IMAPサーバーに接続中... (既知 {len(known_ids)} 件をスキップ)")
+            emails = fetch_emails(max_count=500, skip_ids=known_ids)
+
+            if not emails:
+                status.empty()
+                st.success("新しいメールはありません。")
+                st.rerun()
+            else:
+                total = len(emails)
+                status.info(f"新規 {total} 件を並列AI処理中...")
+                progress = st.progress(0)
+
+                # Step 3: parallel Claude API calls
+                processed = {}
+                errors = []
+                completed_count = 0
+
+                with ThreadPoolExecutor(max_workers=5) as executor:
+                    future_to_em = {executor.submit(_process_one_email, em): em for em in emails}
+                    for future in as_completed(future_to_em):
+                        completed_count += 1
+                        progress.progress(completed_count / total)
+                        try:
+                            em, result, attachment_text = future.result()
+                            processed[em["message_id"]] = (em, result, attachment_text)
+                        except Exception as e:
+                            em = future_to_em[future]
+                            errors.append(f"AI処理エラー ({em['subject'][:30]}): {e}")
+
+                progress.empty()
+                status.empty()
+
+                # Step 4: DB inserts (sequential, fast)
                 new_count = 0
                 project_count = 0
                 candidate_count = 0
-                skip_count = 0
 
-                progress = st.progress(0)
-                for i, em in enumerate(emails):
-                    progress.progress((i + 1) / len(emails))
-
-                    if email_exists(em["message_id"]):
-                        skip_count += 1
+                for em in emails:
+                    item = processed.get(em["message_id"])
+                    if item is None:
                         continue
-
-                    # Parse attachments
-                    attachment_text = ""
-                    for att in em.get("attachments", []):
-                        attachment_text += parse_attachment(att["filename"], att["data"]) + "\n"
-
-                    # Classify and extract via Claude
-                    try:
-                        result = classify_and_extract(
-                            em["subject"], em["body"], attachment_text
-                        )
-                    except Exception as e:
-                        st.warning(f"AI処理エラー ({em['subject'][:30]}): {e}")
-                        continue
+                    _, result, attachment_text = item
 
                     email_type = result.get("type", "unknown")
                     data = result.get("data", {})
@@ -93,35 +126,38 @@ with st.sidebar:
                         em["body"],
                         email_type,
                     )
-
                     if email_id is None:
-                        skip_count += 1
                         continue
 
                     new_count += 1
-
                     if email_type == "project":
-                        insert_project(email_id, data.get("title", em["subject"]), json.dumps(data, ensure_ascii=False))
-                        project_count += 1
+                        title = data.get("title", em["subject"])
+                        if not project_exists(title, em["sender"]):
+                            insert_project(email_id, title, json.dumps(data, ensure_ascii=False))
+                            project_count += 1
                     elif email_type == "candidate":
-                        insert_candidate(
-                            email_id,
-                            data.get("name", "氏名不明"),
-                            json.dumps(data, ensure_ascii=False),
-                            attachment_text[:5000],
-                        )
-                        candidate_count += 1
+                        name = data.get("name", "氏名不明")
+                        if not candidate_exists(name, em["sender"]):
+                            insert_candidate(
+                                email_id,
+                                name,
+                                json.dumps(data, ensure_ascii=False),
+                                attachment_text[:5000],
+                            )
+                            candidate_count += 1
 
-                progress.empty()
+                for err in errors:
+                    st.warning(err)
+
                 st.success(
-                    f"同期完了: 新規 {new_count}件 (案件 {project_count}件 / 人材 {candidate_count}件) / スキップ {skip_count}件"
+                    f"同期完了: 新規 {new_count}件 (案件 {project_count}件 / 人材 {candidate_count}件)"
                 )
                 st.rerun()
 
-            except ValueError as e:
-                st.error(str(e))
-            except Exception as e:
-                st.error(f"メール取得エラー: {e}")
+        except ValueError as e:
+            st.error(str(e))
+        except Exception as e:
+            st.error(f"メール取得エラー: {e}")
 
 
 # ────────────────────────────────────────────
