@@ -601,7 +601,7 @@ with st.sidebar:
 
     page = st.radio(
         "ページ",
-        ["📊 ダッシュボード", "📋 案件一覧", "👤 人材一覧", "🔍 マッチング", "⚙️ 設定"],
+        ["📊 ダッシュボード", "📋 案件一覧", "👤 人材一覧", "🔍 マッチング", "📜 マッチング履歴", "⚙️ 設定"],
         label_visibility="collapsed",
     )
 
@@ -1070,6 +1070,47 @@ def _render_match_results(results: list, all_candidates):
             st.markdown("---")
 
 
+def show_match_history():
+    st.header("📜 マッチング履歴")
+    matches = list(get_all_matches())
+
+    if not matches:
+        st.info("マッチング履歴がありません。")
+        return
+
+    paginated = _paginate(matches, "history")
+
+    rank_labels = ["🥇", "🥈", "🥉", "4位", "5位"]
+
+    for m in paginated:
+        project_title = m["project_title"] or f"案件ID: {m['project_id']}"
+        created_at = m["created_at"][:16]
+
+        with st.container():
+            st.subheader(f"📋 {project_title}　｜　{created_at}")
+
+            header_cols = st.columns([0.5, 2, 1, 1])
+            header_cols[0].markdown("**順位**")
+            header_cols[1].markdown("**人材名**")
+            header_cols[2].markdown("**総合スコア**")
+            header_cols[3].markdown("**スキルスコア**")
+
+            results = json.loads(m["results"])
+            for i, r in enumerate(results[:5]):
+                rank = rank_labels[i] if i < len(rank_labels) else f"{i + 1}位"
+                name = r.get("name", "氏名不明")
+                score = r.get("score", 0)
+                skill_score = r.get("skill_match_score", 0)
+
+                row_cols = st.columns([0.5, 2, 1, 1])
+                row_cols[0].write(rank)
+                row_cols[1].write(name)
+                row_cols[2].write(f"{score} / 100")
+                row_cols[3].write(f"{skill_score} / 100")
+
+            st.markdown("---")
+
+
 def show_settings():
     st.header("⚙️ 設定")
     st.subheader("IMAPサーバー設定")
@@ -1133,5 +1174,7 @@ elif page == "👤 人材一覧":
     show_candidates()
 elif page == "🔍 マッチング":
     show_matching()
+elif page == "📜 マッチング履歴":
+    show_match_history()
 elif page == "⚙️ 設定":
     show_settings()
