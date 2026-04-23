@@ -131,7 +131,14 @@ def get_project_by_id(project_id):
 
 def get_candidate_by_id(candidate_id):
     with get_connection() as conn:
-        return conn.execute("SELECT * FROM candidates WHERE id=?", (candidate_id,)).fetchone()
+        return conn.execute(
+            "SELECT c.*, e.sender, e.received_at, e.body as email_body, "
+            "e.message_id as imap_message_id, e.subject as email_subject, "
+            "e.lark_message_id "
+            "FROM candidates c LEFT JOIN emails e ON c.email_id = e.id "
+            "WHERE c.id=?",
+            (candidate_id,),
+        ).fetchone()
 
 
 def get_latest_match(project_id):
