@@ -128,7 +128,8 @@ def _inject_css():
     }
 
     /* ── Sidebar radio items (VS Code style menu) ── */
-    [data-testid="stSidebar"] label[data-testid="stWidgetLabel"] {
+    /* .stRadio を加えて詳細度を上げ、後続の .stRadio label { display:flex } に負けないようにする */
+    [data-testid="stSidebar"] .stRadio label[data-testid="stWidgetLabel"] {
         display: none !important;
     }
 
