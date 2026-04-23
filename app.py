@@ -371,7 +371,17 @@ def show_matching():
     project_data = json.loads(project_row["data"])
 
     with st.expander("案件詳細を確認"):
-        st.json(project_data)
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.write(f"**案件名:** {project_row['title']}")
+            st.write(f"**必要スキル:** {', '.join(project_data.get('required_skills', [])) or '—'}")
+            st.write(f"**必要経験年数:** {project_data.get('experience_years', '不明')}年以上")
+            st.write(f"**開始時期:** {project_data.get('start_date', '不明')}")
+        with col_b:
+            st.write(f"**勤務形態:** {project_data.get('work_style', '不明')}")
+            st.write(f"**単価/予算:** {project_data.get('budget', '非公開')}")
+            st.write(f"**勤務地:** {project_data.get('location', '不明')}")
+            st.write(f"**期間:** {project_data.get('period', '不明')}")
 
     st.markdown("---")
 
