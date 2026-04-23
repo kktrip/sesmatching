@@ -714,6 +714,8 @@ with st.sidebar:
 # Pages
 # ────────────────────────────────────────────
 
+PAGE_SIZES = [10, 20, 50, 100]
+
 
 def _paginate(items: list, key: str) -> list:
     """Paginate a list of items with session state management.
@@ -735,6 +737,9 @@ def _paginate(items: list, key: str) -> list:
 
     total = len(items)
     page_size = st.session_state[size_key]
+    if page_size not in PAGE_SIZES:
+        page_size = 10
+        st.session_state[size_key] = 10
     total_pages = max(1, (total + page_size - 1) // page_size)
 
     if st.session_state[page_key] >= total_pages:
@@ -746,8 +751,8 @@ def _paginate(items: list, key: str) -> list:
     with col_size:
         new_size = st.selectbox(
             "表示件数",
-            [10, 20, 50, 100],
-            index=[10, 20, 50, 100].index(page_size),
+            PAGE_SIZES,
+            index=PAGE_SIZES.index(page_size),
             key=f"selectbox_{key}",
             label_visibility="collapsed",
         )
