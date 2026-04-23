@@ -961,6 +961,8 @@ def show_candidates():
         with col_avail:
             q_available = st.text_input("参画可能時期", key="cand_q_avail")
         q_free = st.text_input("フリーテキスト（全項目検索）", key="cand_q_free")
+        if q_rate_min > 0 and q_rate_max > 0 and q_rate_min > q_rate_max:
+            st.warning("単価の下限が上限を上回っています。条件を確認してください。")
 
     def _match_candidate(c, data):
         skills_str = " ".join(data.get("skills", [])).lower()
@@ -972,7 +974,7 @@ def show_candidates():
         if q_skill and q_skill.lower() not in skills_str:
             return False
 
-        if q_rate_min > 0 or q_rate_max > 0:
+        if (q_rate_min > 0 or q_rate_max > 0) and not (q_rate_min > 0 and q_rate_max > 0 and q_rate_min > q_rate_max):
             cand_min, cand_max = _parse_rate_yen(data.get("desired_rate") or "")
             if cand_min is not None or cand_max is not None:
                 filter_min = q_rate_min * 10000
