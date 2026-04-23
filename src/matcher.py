@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import os
 import anthropic
@@ -86,10 +87,11 @@ def _haiku_prescreening(project_data: dict, candidates: list[dict]) -> list[dict
             messages=[{"role": "user", "content": prompt}],
         )
         scores = _parse_json_response(response.content[0].text)
-        score_map = {s["id"]: s["score"] for s in scores}
+        score_map = {int(s["id"]): s["score"] for s in scores}
         ranked = sorted(candidates, key=lambda c: score_map.get(c["id"], 0), reverse=True)
         return ranked[:10]
-    except Exception:
+    except Exception as e:
+        logging.warning("haiku_prescreening failed, falling back to all candidates: %s", e)
         return candidates
 
 
