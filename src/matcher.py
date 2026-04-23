@@ -24,6 +24,20 @@ def _parse_json_response(text: str) -> list:
     return json.loads(text)
 
 
+def _keyword_score(project_data: dict, candidate: dict) -> int:
+    """Return keyword overlap count between project required_skills and candidate skills/sheet."""
+    required = [s.lower() for s in project_data.get("required_skills", [])]
+    cand_skills = [s.lower() for s in candidate["data"].get("skills", [])]
+    sheet = (candidate.get("skill_sheet_text") or "").lower()
+    score = 0
+    for req in required:
+        if any(req in cs for cs in cand_skills):
+            score += 2
+        elif req in sheet:
+            score += 1
+    return score
+
+
 def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
     """
     Match a project against candidates and return top 5 ranked results.
@@ -33,6 +47,11 @@ def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
     """
     if not candidates:
         return []
+
+    # Stage 1: keyword pre-filter — limit to top 20 before Claude call
+    if len(candidates) > 20:
+        scored = sorted(candidates, key=lambda c: _keyword_score(project_data, c), reverse=True)
+        candidates = scored[:20]
 
     candidate_summaries = []
     for c in candidates:
