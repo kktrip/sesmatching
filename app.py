@@ -77,6 +77,13 @@ def _inject_css():
         color: var(--text-primary) !important;
     }
 
+    /* Material Symbols フォントを保護
+       [stSidebar] * より高い詳細度 [0,2,0] にして上書きされないようにする */
+    [data-testid="stIconMaterial"],
+    [data-testid="stSidebar"] [data-testid="stIconMaterial"] {
+        font-family: 'Material Symbols Rounded' !important;
+    }
+
     /* ── Top bar ── */
     [data-testid="stHeader"] {
         background: rgba(245,247,250,0.90) !important;
