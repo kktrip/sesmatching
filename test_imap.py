@@ -5,11 +5,16 @@ IMAP / POP3接続デバッグスクリプト
 import imaplib
 import poplib
 import base64
+import os
+from dotenv import load_dotenv
 
-HOST = "irohamaru-works.sakura.ne.jp"
-USER_FULL = "info@falcs.jp"
-USER_SHORT = "info"
-PASSWORD = "pC5SWv3tp9U5"
+load_dotenv()
+
+HOST = os.getenv("IMAP_HOST", "irohamaru-works.sakura.ne.jp")
+USER_FULL = os.getenv("IMAP_USER", "")
+USER_SHORT = USER_FULL.split("@")[0] if USER_FULL else ""
+USER_SAKURA = USER_FULL
+PASSWORD = os.getenv("IMAP_PASSWORD", "")
 
 
 def imap_auth_plain(host, port, user, password, use_ssl=True):
@@ -22,14 +27,14 @@ def imap_auth_plain(host, port, user, password, use_ssl=True):
         encoded = base64.b64encode(auth_str.encode()).decode()
         typ, data = conn.authenticate("PLAIN", lambda x: encoded.encode())
         if typ == "OK":
-            print(f"  ✅ AUTH=PLAIN成功 [user={user}]")
+            print(f"  [OK] AUTH=PLAIN成功 [user={user}]")
             conn.logout()
             return True
         else:
-            print(f"  ❌ AUTH=PLAIN失敗 [user={user}]: {data}")
+            print(f"  [NG] AUTH=PLAIN失敗 [user={user}]: {data}")
             return False
     except Exception as e:
-        print(f"  ❌ AUTH=PLAINエラー [user={user}]: {e}")
+        print(f"  [NG] AUTH=PLAINエラー [user={user}]: {e}")
         return False
 
 
@@ -42,27 +47,27 @@ print("\n[1] IMAP SSL port 993 - LOGIN")
 try:
     conn = imaplib.IMAP4_SSL(HOST, 993)
     print("  接続: OK")
-    for user in [USER_FULL, USER_SHORT]:
+    for user in [USER_FULL, USER_SHORT, USER_SAKURA]:
         try:
             c = imaplib.IMAP4_SSL(HOST, 993)
             c.login(user, PASSWORD)
-            print(f"  ✅ ログイン成功 [user={user}]")
+            print(f"  [OK] ログイン成功 [user={user}]")
             c.logout()
             break
         except imaplib.IMAP4.error as e:
-            print(f"  ❌ ログイン失敗 [user={user}]: {e}")
+            print(f"  [NG] ログイン失敗 [user={user}]: {e}")
 except Exception as e:
     print(f"  接続失敗: {e}")
 
 # 2. IMAP SSL (port 993) - AUTH=PLAIN
 print("\n[2] IMAP SSL port 993 - AUTH=PLAIN")
-for user in [USER_FULL, USER_SHORT]:
+for user in [USER_FULL, USER_SHORT, USER_SAKURA]:
     if imap_auth_plain(HOST, 993, user, PASSWORD, use_ssl=True):
         break
 
 # 3. IMAP STARTTLS (port 143) - AUTH=PLAIN
 print("\n[3] IMAP STARTTLS port 143 - AUTH=PLAIN")
-for user in [USER_FULL, USER_SHORT]:
+for user in [USER_FULL, USER_SHORT, USER_SAKURA]:
     if imap_auth_plain(HOST, 143, user, PASSWORD, use_ssl=False):
         break
 
@@ -71,17 +76,17 @@ print("\n[4] POP3 SSL port 995")
 try:
     pop = poplib.POP3_SSL(HOST, 995)
     print("  接続: OK")
-    for user in [USER_FULL, USER_SHORT]:
+    for user in [USER_FULL, USER_SHORT, USER_SAKURA]:
         try:
             pop2 = poplib.POP3_SSL(HOST, 995)
             pop2.user(user)
             pop2.pass_(PASSWORD)
             count, size = pop2.stat()
-            print(f"  ✅ ログイン成功 [user={user}] メール数: {count}")
+            print(f"  [OK] ログイン成功 [user={user}] メール数: {count}")
             pop2.quit()
             break
         except poplib.error_proto as e:
-            print(f"  ❌ ログイン失敗 [user={user}]: {e}")
+            print(f"  [NG] ログイン失敗 [user={user}]: {e}")
 except Exception as e:
     print(f"  接続失敗: {e}")
 
@@ -90,17 +95,17 @@ print("\n[5] POP3 port 110")
 try:
     pop = poplib.POP3(HOST, 110)
     print("  接続: OK")
-    for user in [USER_FULL, USER_SHORT]:
+    for user in [USER_FULL, USER_SHORT, USER_SAKURA]:
         try:
             pop2 = poplib.POP3(HOST, 110)
             pop2.user(user)
             pop2.pass_(PASSWORD)
             count, size = pop2.stat()
-            print(f"  ✅ ログイン成功 [user={user}] メール数: {count}")
+            print(f"  [OK] ログイン成功 [user={user}] メール数: {count}")
             pop2.quit()
             break
         except poplib.error_proto as e:
-            print(f"  ❌ ログイン失敗 [user={user}]: {e}")
+            print(f"  [NG] ログイン失敗 [user={user}]: {e}")
 except Exception as e:
     print(f"  接続失敗: {e}")
 

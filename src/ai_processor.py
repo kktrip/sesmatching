@@ -15,7 +15,7 @@ def _get_client():
     return _client
 
 
-def _parse_json_response(text: str) -> dict | list:
+def _parse_json_response(text: str):
     text = text.strip()
     if text.startswith("```"):
         lines = text.split("\n")
@@ -40,6 +40,14 @@ def classify_and_extract(subject: str, body: str, attachment_text: str = "") -> 
 
 【本文】
 {body[:4000]}{attachment_section}
+
+【判断基準】
+人材メールの条件（以下のいずれかを満たす場合）:
+- スキルシートまたは職務経歴書が添付されている
+- 件名に「要員」という文字が含まれている
+- 本文に人物の氏名（姓名）が記載されている
+
+上記のいずれも満たさない場合は案件メールまたはunknownとして判断してください。
 
 以下のJSON形式のみで回答してください（説明文不要）:
 
