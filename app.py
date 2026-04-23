@@ -216,7 +216,46 @@ def show_projects():
         st.info("案件がありません。サイドバーから「メールを取得・同期」を実行してください。")
         return
 
-    for p in projects:
+    # ── 検索フィルタ ──
+    with st.expander("🔍 検索・絞り込み", expanded=True):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            q_title = st.text_input("案件名", key="proj_q_title")
+            q_skill = st.text_input("必要スキル", key="proj_q_skill")
+        with col2:
+            q_work_style = st.selectbox(
+                "勤務形態",
+                ["指定なし", "リモート", "常駐", "ハイブリッド"],
+                key="proj_q_ws",
+            )
+            q_budget = st.text_input("単価", key="proj_q_budget")
+        with col3:
+            q_free = st.text_input("フリーテキスト（全項目検索）", key="proj_q_free")
+
+    def _match_project(p):
+        data = json.loads(p["data"])
+        title_str = p["title"].lower()
+        skills_str = " ".join(data.get("required_skills", [])).lower()
+        work_style_str = (data.get("work_style") or "").lower()
+        budget_str = (data.get("budget") or "").lower()
+        all_text = (json.dumps(data, ensure_ascii=False) + " " + p["title"]).lower()
+
+        if q_title and q_title.lower() not in title_str:
+            return False
+        if q_skill and q_skill.lower() not in skills_str:
+            return False
+        if q_work_style != "指定なし" and q_work_style.lower() not in work_style_str:
+            return False
+        if q_budget and q_budget.lower() not in budget_str:
+            return False
+        if q_free and q_free.lower() not in all_text:
+            return False
+        return True
+
+    filtered = [p for p in projects if _match_project(p)]
+    st.caption(f"{len(filtered)} 件 / 全 {len(projects)} 件")
+
+    for p in filtered:
         data = json.loads(p["data"])
         skills = ", ".join(data.get("required_skills", []))
         with st.expander(f"📋 {p['title']}　｜　{data.get('location', '勤務地不明')}　｜　{p['created_at'][:10]}"):
@@ -230,7 +269,6 @@ def show_projects():
                 st.write(f"**勤務形態:** {data.get('work_style', '不明')}")
                 st.write(f"**単価/予算:** {data.get('budget', '非公開')}")
                 st.write(f"**送信者:** {p['sender']}")
-            st.write(f"**概要:** {data.get('description', '—')}")
 
 
 def show_candidates():
