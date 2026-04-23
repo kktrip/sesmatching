@@ -143,6 +143,7 @@ def get_all_message_ids():
 
 
 def project_exists(title: str, sender: str) -> bool:
+    """Return True if a project with this title from this sender is already stored."""
     with get_connection() as conn:
         row = conn.execute(
             "SELECT p.id FROM projects p JOIN emails e ON p.email_id = e.id WHERE p.title=? AND e.sender=?",
@@ -152,6 +153,7 @@ def project_exists(title: str, sender: str) -> bool:
 
 
 def candidate_exists(name: str, sender: str) -> bool:
+    """Return True if a candidate with this name from this sender is already stored."""
     with get_connection() as conn:
         row = conn.execute(
             "SELECT c.id FROM candidates c JOIN emails e ON c.email_id = e.id WHERE c.name=? AND e.sender=?",
