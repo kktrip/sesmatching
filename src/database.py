@@ -133,3 +133,28 @@ def email_exists(message_id):
     with get_connection() as conn:
         row = conn.execute("SELECT id FROM emails WHERE message_id=?", (message_id,)).fetchone()
         return row is not None
+
+
+def get_all_message_ids():
+    """Return set of all message_id strings already stored in DB."""
+    with get_connection() as conn:
+        rows = conn.execute("SELECT message_id FROM emails").fetchall()
+        return {row[0] for row in rows}
+
+
+def project_exists(title: str, sender: str) -> bool:
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT p.id FROM projects p JOIN emails e ON p.email_id = e.id WHERE p.title=? AND e.sender=?",
+            (title, sender),
+        ).fetchone()
+        return row is not None
+
+
+def candidate_exists(name: str, sender: str) -> bool:
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT c.id FROM candidates c JOIN emails e ON c.email_id = e.id WHERE c.name=? AND e.sender=?",
+            (name, sender),
+        ).fetchone()
+        return row is not None
