@@ -717,6 +717,38 @@ with st.sidebar:
 PAGE_SIZES = [10, 20, 50, 100]
 
 
+def _render_reply_button(
+    email_id: int | None,
+    subject: str | None,
+    sender: str | None,
+    cached_lark_id: str | None,
+    key: str,
+):
+    """Larkメール返信ボタンを描画する。押下時にAPIでURL取得し st.link_button で表示。"""
+    from src.lark_mail import get_latest_reply_lark_id, get_lark_url
+
+    if not email_id or not subject:
+        return
+
+    url_key = f"reply_url_{key}"
+
+    if st.button("↩️ メール返信", key=f"reply_btn_{key}"):
+        with st.spinner("Larkメールを検索中..."):
+            try:
+                lark_id = get_latest_reply_lark_id(
+                    email_id=email_id,
+                    subject=subject,
+                    sender=sender or "",
+                    cached_lark_id=cached_lark_id,
+                )
+                st.session_state[url_key] = get_lark_url(lark_id, subject)
+            except Exception:
+                st.session_state[url_key] = get_lark_url(None, subject)
+
+    if url_key in st.session_state:
+        st.link_button("↗ Larkで開く", url=st.session_state[url_key])
+
+
 def _paginate(items: list, key: str) -> list:
     """Paginate a list of items with session state management.
 
