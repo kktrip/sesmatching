@@ -279,8 +279,53 @@ def show_candidates():
         st.info("人材がありません。サイドバーから「メールを取得・同期」を実行してください。")
         return
 
-    for c in candidates:
-        data = json.loads(c["data"])
+    candidates_with_data = [(c, json.loads(c["data"])) for c in candidates]
+
+    # ── 検索フィルタ ──
+    with st.expander("🔍 検索・絞り込み", expanded=True):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            q_skill = st.text_input("スキル", key="cand_q_skill")
+            q_rate = st.text_input("単価", key="cand_q_rate")
+        with col2:
+            q_age_min = st.number_input("年齢（下限）", min_value=0, max_value=99, value=0, step=1, key="cand_q_age_min")
+            q_age_max = st.number_input("年齢（上限）", min_value=0, max_value=99, value=99, step=1, key="cand_q_age_max")
+        with col3:
+            q_work_style = st.selectbox(
+                "希望勤務形態",
+                ["指定なし", "リモート", "常駐", "ハイブリッド"],
+                key="cand_q_ws",
+            )
+            q_available = st.text_input("参画可能時期", key="cand_q_avail")
+        q_free = st.text_input("フリーテキスト（全項目検索）", key="cand_q_free")
+
+    def _match_candidate(c, data):
+        skills_str = " ".join(data.get("skills", [])).lower()
+        rate_str = (data.get("desired_rate") or "").lower()
+        ws_str = (data.get("work_style_preference") or "").lower()
+        avail_str = (data.get("available_from") or "").lower()
+        all_text = (json.dumps(data, ensure_ascii=False) + " " + c["name"]).lower()
+        age = data.get("age")
+
+        if q_skill and q_skill.lower() not in skills_str:
+            return False
+        if q_rate and q_rate.lower() not in rate_str:
+            return False
+        if age is not None:
+            if int(age) < q_age_min or int(age) > q_age_max:
+                return False
+        if q_work_style != "指定なし" and q_work_style not in ws_str:
+            return False
+        if q_available and q_available.lower() not in avail_str:
+            return False
+        if q_free and q_free.lower() not in all_text:
+            return False
+        return True
+
+    filtered = [(c, data) for c, data in candidates_with_data if _match_candidate(c, data)]
+    st.caption(f"{len(filtered)} 件 / 全 {len(candidates)} 件")
+
+    for c, data in filtered:
         skills = ", ".join(data.get("skills", []))
         with st.expander(f"👤 {c['name']}　｜　経験 {data.get('experience_years', '?')}年　｜　{c['created_at'][:10]}"):
             col1, col2 = st.columns(2)
@@ -292,10 +337,13 @@ def show_candidates():
                 st.write(f"**参画可能時期:** {data.get('available_from', '不明')}")
                 st.write(f"**希望勤務形態:** {data.get('work_style_preference', '不明')}")
                 st.write(f"**希望単価:** {data.get('desired_rate', '非公開')}")
-            st.write(f"**概要:** {data.get('summary', '—')}")
             if c["skill_sheet_text"]:
                 with st.expander("スキルシート（抜粋）"):
                     st.text(c["skill_sheet_text"][:1000])
+            email_body = c["email_body"] if "email_body" in c.keys() else None
+            if email_body:
+                with st.expander("📧 メール全文を見る"):
+                    st.text(email_body)
 
 
 def show_matching():
