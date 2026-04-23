@@ -1054,7 +1054,7 @@ def show_matching():
     latest_match = get_latest_match(selected_project_id)
     if latest_match:
         st.info(f"前回のマッチング結果（{latest_match['created_at'][:16]}）を表示中")
-        _render_match_results(json.loads(latest_match["results"]), candidates)
+        _render_match_results(json.loads(latest_match["results"]), candidates, project_row)
 
     col1, col2 = st.columns([1, 4])
     with col1:
@@ -1075,12 +1075,12 @@ def show_matching():
                 results = match_candidates(project_data, candidate_dicts)
                 insert_match(selected_project_id, json.dumps(results, ensure_ascii=False))
                 st.success("マッチング完了！上位5名を表示します。")
-                _render_match_results(results, candidates)
+                _render_match_results(results, candidates, project_row)
             except Exception as e:
                 st.error(f"マッチングエラー: {e}")
 
 
-def _render_match_results(results: list, all_candidates):
+def _render_match_results(results: list, all_candidates, project_row=None):
     candidates_by_id = {c["id"]: c for c in all_candidates}
 
     st.subheader("🏆 マッチング結果 TOP 5")
@@ -1112,6 +1112,24 @@ def _render_match_results(results: list, all_candidates):
             st.write(f"**選定理由:** {reason}")
             if concerns:
                 st.warning(f"**懸念点:** {concerns}")
+            if project_row is not None and candidate_row is not None:
+                col_proj_btn, col_cand_btn = st.columns(2)
+                with col_proj_btn:
+                    _render_reply_button(
+                        email_id=project_row["email_id"] if "email_id" in project_row.keys() else None,
+                        subject=project_row["email_subject"] if "email_subject" in project_row.keys() else project_row["title"],
+                        sender=project_row["sender"] if "sender" in project_row.keys() else None,
+                        cached_lark_id=project_row["lark_message_id"] if "lark_message_id" in project_row.keys() else None,
+                        key=f"match_proj_{project_row['id']}_{i}",
+                    )
+                with col_cand_btn:
+                    _render_reply_button(
+                        email_id=candidate_row["email_id"] if "email_id" in candidate_row.keys() else None,
+                        subject=candidate_row["email_subject"] if "email_subject" in candidate_row.keys() else candidate_row["name"],
+                        sender=candidate_row["sender"] if "sender" in candidate_row.keys() else None,
+                        cached_lark_id=candidate_row["lark_message_id"] if "lark_message_id" in candidate_row.keys() else None,
+                        key=f"match_cand_{cid}_{i}",
+                    )
             st.markdown("---")
 
 
