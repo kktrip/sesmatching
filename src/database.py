@@ -131,12 +131,6 @@ def get_stats():
         return {"projects": projects, "candidates": candidates, "matches": matches}
 
 
-def email_exists(message_id):
-    with get_connection() as conn:
-        row = conn.execute("SELECT id FROM emails WHERE message_id=?", (message_id,)).fetchone()
-        return row is not None
-
-
 def get_all_message_ids():
     """Return set of all message_id strings already stored in DB."""
     with get_connection() as conn:

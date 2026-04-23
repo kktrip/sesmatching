@@ -108,6 +108,7 @@ with st.sidebar:
                 new_count = 0
                 project_count = 0
                 candidate_count = 0
+                dedup_skip_count = 0
 
                 for em in emails:
                     item = processed.get(em["message_id"])
@@ -135,6 +136,8 @@ with st.sidebar:
                         if not project_exists(title, em["sender"]):
                             insert_project(email_id, title, json.dumps(data, ensure_ascii=False))
                             project_count += 1
+                        else:
+                            dedup_skip_count += 1
                     elif email_type == "candidate":
                         name = data.get("name", "氏名不明")
                         if not candidate_exists(name, em["sender"]):
@@ -145,12 +148,15 @@ with st.sidebar:
                                 attachment_text[:5000],
                             )
                             candidate_count += 1
+                        else:
+                            dedup_skip_count += 1
 
                 for err in errors:
                     st.warning(err)
 
+                dedup_msg = f" / 重複スキップ {dedup_skip_count}件" if dedup_skip_count else ""
                 st.success(
-                    f"同期完了: 新規 {new_count}件 (案件 {project_count}件 / 人材 {candidate_count}件)"
+                    f"同期完了: 新規 {new_count}件 (案件 {project_count}件 / 人材 {candidate_count}件{dedup_msg})"
                 )
                 st.rerun()
 
@@ -245,7 +251,7 @@ def show_projects():
             return False
         if q_skill and q_skill.lower() not in skills_str:
             return False
-        if q_work_style != "指定なし" and q_work_style not in work_style_str:
+        if q_work_style != "指定なし" and q_work_style.lower() not in work_style_str:
             return False
         if q_budget and q_budget.lower() not in budget_str:
             return False
