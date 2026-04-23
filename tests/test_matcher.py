@@ -1,7 +1,7 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from src.matcher import _extract_relevant_excerpt, _haiku_prescreening
+from src.matcher import _extract_relevant_excerpt, _haiku_prescreening, match_candidates
 
 
 def test_extract_finds_matching_sentences():
@@ -117,3 +117,101 @@ def test_haiku_prescreening_fewer_than_10_candidates():
 
     # 7名しかいない場合は全員返す（10名に満たない）
     assert len(result) == 7
+
+
+def test_match_candidates_calls_haiku_then_sonnet():
+    """20名のとき Haiku と Sonnet の2回 API が呼ばれることを確認する。"""
+    candidates = [
+        {
+            "id": i,
+            "name": f"候補者{i}",
+            "data": {"skills": ["Python"], "experience_years": 3, "available_from": "即日", "work_style_preference": "リモート"},
+            "skill_sheet_text": "Pythonでの開発経験があります。",
+        }
+        for i in range(20)
+    ]
+    project_data = {
+        "title": "Pythonエンジニア募集",
+        "required_skills": ["Python"],
+        "experience_years": 2,
+        "work_style": "リモート",
+        "location": "東京",
+        "start_date": "即日",
+        "period": "6ヶ月",
+        "budget": "60万",
+    }
+
+    haiku_scores = json.dumps([{"id": i, "score": 20 - i} for i in range(20)])
+    sonnet_results = json.dumps([
+        {
+            "candidate_id": i,
+            "name": f"候補者{i}",
+            "score": 90 - i * 3,
+            "skill_match_score": 85,
+            "reason": "Pythonスキルが合致しています。",
+            "concerns": "",
+        }
+        for i in range(5)
+    ])
+
+    call_count = 0
+
+    def mock_create(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        mock = MagicMock()
+        if call_count == 1:
+            mock.content = [MagicMock(text=haiku_scores)]
+        else:
+            mock.content = [MagicMock(text=sonnet_results)]
+        return mock
+
+    with patch("src.matcher._get_client") as mock_get_client:
+        mock_get_client.return_value.messages.create.side_effect = mock_create
+        result = match_candidates(project_data, candidates)
+
+    assert call_count == 2
+    assert len(result) <= 5
+    assert all("score" in r for r in result)
+
+
+def test_match_candidates_returns_empty_for_no_candidates():
+    result = match_candidates({"required_skills": ["Python"]}, [])
+    assert result == []
+
+
+def test_match_candidates_sonnet_uses_max_tokens_2000():
+    """Sonnet 呼び出し時の max_tokens が 2000 であることを確認する。"""
+    candidates = [
+        {
+            "id": i,
+            "name": f"候補者{i}",
+            "data": {"skills": ["Python"]},
+            "skill_sheet_text": "Python開発",
+        }
+        for i in range(3)
+    ]
+    project_data = {"required_skills": ["Python"], "title": "テスト案件"}
+
+    sonnet_results = json.dumps([
+        {"candidate_id": 0, "name": "候補者0", "score": 90, "skill_match_score": 85, "reason": "理由", "concerns": ""}
+    ])
+
+    call_args_list = []
+
+    def mock_create(**kwargs):
+        call_args_list.append(kwargs)
+        mock = MagicMock()
+        if len(call_args_list) == 1:
+            mock.content = [MagicMock(text=json.dumps([{"id": i, "score": 3 - i} for i in range(3)]))]
+        else:
+            mock.content = [MagicMock(text=sonnet_results)]
+        return mock
+
+    with patch("src.matcher._get_client") as mock_get_client:
+        mock_get_client.return_value.messages.create.side_effect = mock_create
+        match_candidates(project_data, candidates)
+
+    sonnet_call = call_args_list[1]
+    assert sonnet_call["max_tokens"] == 2000
+    assert sonnet_call["model"] == "claude-sonnet-4-6"

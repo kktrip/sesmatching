@@ -105,11 +105,22 @@ def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
     if not candidates:
         return []
 
-    # Stage 1: keyword pre-filter — limit to top 20 before Claude call
+    # Stage 0: keyword pre-filter — limit to top 20 before Claude calls
     if len(candidates) > 20:
         scored = sorted(candidates, key=lambda c: _keyword_score(project_data, c), reverse=True)
         candidates = scored[:20]
 
+    # Stage B: compress skill sheets to relevant excerpts
+    required_skills = project_data.get("required_skills", [])
+    for c in candidates:
+        c["_compressed_excerpt"] = _extract_relevant_excerpt(
+            c.get("skill_sheet_text") or "", required_skills
+        )
+
+    # Stage A-1: Haiku pre-screening → top 10
+    candidates = _haiku_prescreening(project_data, candidates)
+
+    # Stage A-2: Sonnet detailed evaluation
     candidate_summaries = []
     for c in candidates:
         summary = {
@@ -117,8 +128,8 @@ def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
             "name": c["name"],
             **c["data"],
         }
-        if c.get("skill_sheet_text"):
-            summary["skill_sheet_excerpt"] = c["skill_sheet_text"][:500]
+        if c.get("_compressed_excerpt"):
+            summary["skill_sheet_excerpt"] = c["_compressed_excerpt"]
         candidate_summaries.append(summary)
 
     prompt = f"""あなたはSES（システムエンジニアリングサービス）の経験豊富なコーディネーターです。
@@ -152,7 +163,7 @@ def match_candidates(project_data: dict, candidates: list[dict]) -> list[dict]:
 
     response = _get_client().messages.create(
         model="claude-sonnet-4-6",
-        max_tokens=3000,
+        max_tokens=2000,
         messages=[{"role": "user", "content": prompt}],
     )
 
