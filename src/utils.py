@@ -1,7 +1,7 @@
 import re
 
 
-def _parse_rate_yen(rate_str) -> tuple:
+def _parse_rate_yen(rate_str: str | None) -> tuple[int | None, int | None]:
     """単価文字列から (min_yen, max_yen) を返す。パース失敗時は (None, None)。"""
     if not rate_str:
         return (None, None)
