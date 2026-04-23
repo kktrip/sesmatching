@@ -33,69 +33,529 @@ from src.matcher import match_candidates
 
 
 def _inject_css():
-    """Inject global yellow-theme CSS once at app startup via st.markdown."""
+    """Inject Light Command Center design system via st.markdown."""
     st.markdown("""
     <style>
-    /* ── エクスパンダー（カード） ── */
-    [data-testid="stExpander"] {
-        border-left: 4px solid #EAB308;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        margin-bottom: 8px;
-        background: #FFFFFF;
-    }
-    [data-testid="stExpander"]:hover {
-        box-shadow: 0 3px 8px rgba(234,179,8,0.2);
+    /* ═══════════════════════════════════════════════════
+       Fonts
+    ═══════════════════════════════════════════════════ */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    /* ═══════════════════════════════════════════════════
+       Design Tokens
+    ═══════════════════════════════════════════════════ */
+    :root {
+        --bg-base:        #F5F7FA;
+        --bg-elevated:    #EAECF0;
+        --bg-card:        #FFFFFF;
+        --bg-hover:       #E2E5EA;
+        --border:         rgba(180,130,0,0.20);
+        --border-hover:   rgba(180,130,0,0.50);
+        --amber:          #D97706;
+        --amber-bright:   #F59E0B;
+        --amber-dim:      #B45309;
+        --amber-glow:     rgba(217,119,6,0.10);
+        --amber-glow-strong: rgba(217,119,6,0.25);
+        --sky:            #0284C7;
+        --green:          #16A34A;
+        --red:            #DC2626;
+        --text-primary:   #1C1E26;
+        --text-secondary: #4A5568;
+        --text-muted:     #8896A4;
+        --font-sans:      'Noto Sans JP', -apple-system, sans-serif;
+        --font-mono:      'JetBrains Mono', monospace;
+        --radius:         8px;
+        --radius-lg:      12px;
     }
 
-    /* ── メトリクス ── */
-    [data-testid="stMetric"] {
-        background: #FFFFFF;
-        border-top: 3px solid #EAB308;
-        border-radius: 8px;
-        padding: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    /* ═══════════════════════════════════════════════════
+       Base
+    ═══════════════════════════════════════════════════ */
+    html, body, .stApp {
+        background: var(--bg-base) !important;
+        font-family: var(--font-sans) !important;
+        color: var(--text-primary) !important;
     }
 
-    /* ── ボタン ── */
-    [data-testid="stButton"] > button {
-        background-color: #EAB308 !important;
-        color: #1C1917 !important;
-        border: none !important;
-        border-radius: 8px !important;
+    /* ── Top bar ── */
+    [data-testid="stHeader"] {
+        background: rgba(245,247,250,0.90) !important;
+        border-bottom: 1px solid var(--border) !important;
+        backdrop-filter: blur(12px) !important;
+    }
+
+    /* ── Main content padding ── */
+    .main .block-container {
+        padding: 1.75rem 2.5rem !important;
+        max-width: 1400px !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Sidebar
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stSidebar"] {
+        background: var(--bg-elevated) !important;
+        border-right: 1px solid var(--border) !important;
+    }
+
+    [data-testid="stSidebar"] * {
+        font-family: var(--font-sans) !important;
+    }
+
+    [data-testid="stSidebar"] h1 {
+        color: var(--amber) !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        border-bottom: 1px solid var(--border) !important;
+        padding-bottom: 0.65rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        color: var(--text-muted) !important;
+        font-size: 0.68rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stMarkdown"] p {
+        color: var(--text-muted) !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* ── Sidebar radio items (VS Code style menu) ── */
+    [data-testid="stSidebar"] label[data-testid="stWidgetLabel"] {
+        display: none;
+    }
+
+    /* ラジオボタンの○とその装飾要素を非表示 */
+    [data-testid="stSidebar"] .stRadio input[type="radio"] {
+        display: none !important;
+    }
+
+    [data-testid="stSidebar"] .stRadio label > div:first-child {
+        display: none !important;
+    }
+
+    /* メニュー項目の行全体をクリック可能に */
+    [data-testid="stSidebar"] .stRadio > div {
+        gap: 0 !important;
+    }
+
+    [data-testid="stSidebar"] .stRadio label {
+        display: flex !important;
+        align-items: center !important;
+        color: var(--text-secondary) !important;
+        font-size: 0.875rem !important;
+        font-weight: 400 !important;
+        padding: 0.55rem 1rem !important;
+        border-left: 3px solid transparent !important;
+        border-radius: 0 !important;
+        transition: background 0.15s, color 0.15s, border-left-color 0.15s !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ホバー */
+    [data-testid="stSidebar"] .stRadio label:hover {
+        background: var(--amber-glow) !important;
+        color: var(--amber-bright) !important;
+    }
+
+    /* アクティブ項目: 左アンバーバー + 薄アンバー背景 */
+    [data-testid="stSidebar"] .stRadio label:has(input:checked) {
+        border-left-color: var(--amber) !important;
+        background: var(--amber-glow) !important;
+        color: var(--amber) !important;
+        font-weight: 500 !important;
+    }
+
+    /* ── Sidebar divider ── */
+    [data-testid="stSidebar"] hr {
+        border-color: var(--border) !important;
+        margin: 0.75rem 0 !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Typography
+    ═══════════════════════════════════════════════════ */
+    h1 {
+        color: var(--text-primary) !important;
+        font-size: 1.65rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.025em !important;
+        border-bottom: 1px solid var(--border) !important;
+        padding-bottom: 0.7rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    h2 {
+        color: var(--text-primary) !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        margin-top: 1.25rem !important;
+    }
+
+    h3 {
+        color: var(--text-primary) !important;
+        font-size: 1.05rem !important;
+        font-weight: 500 !important;
+    }
+
+    p, .stMarkdown p {
+        color: var(--text-secondary) !important;
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+    }
+
+    /* Prevent global p rule from overriding metric/expander internals */
+    [data-testid="stMetricValue"] p,
+    [data-testid="stMetricValue"] div {
+        color: var(--amber) !important;
+        font-family: var(--font-mono) !important;
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+        line-height: 1.1 !important;
+    }
+
+    [data-testid="stExpander"] summary p {
+        color: var(--text-primary) !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        margin: 0 !important;
+    }
+
+    strong {
+        color: var(--text-primary) !important;
         font-weight: 600 !important;
     }
+
+    hr {
+        border-color: var(--border) !important;
+        margin: 1.25rem 0 !important;
+    }
+
+    [data-testid="stCaptionContainer"],
+    .stCaption {
+        color: var(--text-muted) !important;
+        font-size: 0.78rem !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Metrics
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stMetric"] {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-top: 2px solid var(--amber) !important;
+        border-radius: var(--radius-lg) !important;
+        padding: 1.25rem 1.5rem !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+        transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+        animation: fadeUp 0.5s ease both !important;
+    }
+
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 8px 32px var(--amber-glow-strong) !important;
+    }
+
+    [data-testid="stMetricLabel"] p,
+    [data-testid="stMetricLabel"] label {
+        color: var(--text-muted) !important;
+        font-size: 0.7rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.1em !important;
+        text-transform: uppercase !important;
+        margin: 0 !important;
+    }
+
+    [data-testid="stMetricValue"] p,
+    [data-testid="stMetricValue"] div {
+        color: var(--amber) !important;
+        font-family: var(--font-mono) !important;
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+        line-height: 1.1 !important;
+        margin: 0 !important;
+    }
+
+    [data-testid="stMetricDelta"] p,
+    [data-testid="stMetricDelta"] div {
+        font-family: var(--font-mono) !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Expander / Cards
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stExpander"] {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-left: 3px solid var(--amber) !important;
+        border-radius: var(--radius) !important;
+        margin-bottom: 5px !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+        transition: border-left-color 0.18s, box-shadow 0.18s, transform 0.18s !important;
+        animation: fadeUp 0.35s ease both !important;
+        overflow: hidden !important;
+    }
+
+    [data-testid="stExpander"]:hover {
+        box-shadow: 0 5px 24px var(--amber-glow) !important;
+        transform: translateX(3px) !important;
+    }
+
+    [data-testid="stExpander"] summary {
+        color: var(--text-primary) !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
+        padding: 0.8rem 1rem !important;
+        background: transparent !important;
+    }
+
+    [data-testid="stExpander"] summary:hover {
+        color: var(--amber-bright) !important;
+    }
+
+    [data-testid="stExpanderDetails"] {
+        background: var(--bg-hover) !important;
+        border-top: 1px solid var(--border) !important;
+        padding: 1rem 1.1rem !important;
+    }
+
+    /* staggered card animation */
+    [data-testid="stExpander"]:nth-child(1)  { animation-delay: 0.04s !important; }
+    [data-testid="stExpander"]:nth-child(2)  { animation-delay: 0.08s !important; }
+    [data-testid="stExpander"]:nth-child(3)  { animation-delay: 0.12s !important; }
+    [data-testid="stExpander"]:nth-child(4)  { animation-delay: 0.16s !important; }
+    [data-testid="stExpander"]:nth-child(5)  { animation-delay: 0.20s !important; }
+
+    /* ═══════════════════════════════════════════════════
+       Buttons
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stButton"] > button {
+        background: transparent !important;
+        color: var(--amber) !important;
+        border: 1px solid var(--amber) !important;
+        border-radius: var(--radius) !important;
+        font-family: var(--font-sans) !important;
+        font-weight: 500 !important;
+        font-size: 0.875rem !important;
+        letter-spacing: 0.02em !important;
+        transition: background 0.18s, color 0.18s, box-shadow 0.18s !important;
+    }
+
     [data-testid="stButton"] > button:hover {
-        background-color: #CA8A04 !important;
+        background: var(--amber) !important;
         color: #FFFFFF !important;
+        box-shadow: 0 0 20px var(--amber-glow-strong) !important;
     }
 
-    /* ── ページヘッダー ── */
-    h1 {
-        border-bottom: 2px solid #EAB308;
-        padding-bottom: 8px;
-        margin-bottom: 20px;
+    /* Primary-type button (type="primary") */
+    [data-testid="stBaseButton-primary"] {
+        background: var(--amber) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: var(--radius) !important;
+        font-weight: 700 !important;
+        font-size: 0.875rem !important;
+        letter-spacing: 0.02em !important;
+        transition: background 0.18s, box-shadow 0.18s !important;
     }
 
-    /* ── テキストインプット フォーカス ── */
-    [data-testid="stTextInput"] input:focus {
-        border-color: #EAB308 !important;
-        box-shadow: 0 0 0 2px rgba(234,179,8,0.25) !important;
+    [data-testid="stBaseButton-primary"]:hover {
+        background: var(--amber-bright) !important;
+        box-shadow: 0 0 28px var(--amber-glow-strong) !important;
     }
 
-    /* ── セレクトボックス フォーカス ── */
-    [data-testid="stSelectbox"] > div:focus-within {
-        border-color: #EAB308 !important;
+    /* ═══════════════════════════════════════════════════
+       Form Inputs
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stTextInput"] input,
+    [data-testid="stNumberInput"] input,
+    [data-testid="stTextArea"] textarea {
+        background: var(--bg-card) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius) !important;
+        font-family: var(--font-sans) !important;
+        font-size: 0.9rem !important;
+        transition: border-color 0.18s, box-shadow 0.18s !important;
     }
 
-    /* ── サイドバータイトル ── */
-    [data-testid="stSidebar"] h1 {
-        border-bottom: 2px solid #EAB308;
+    [data-testid="stTextInput"] input:focus,
+    [data-testid="stNumberInput"] input:focus,
+    [data-testid="stTextArea"] textarea:focus {
+        border-color: var(--amber) !important;
+        box-shadow: 0 0 0 3px var(--amber-glow) !important;
+        outline: none !important;
     }
 
-    /* ── プログレスバー ── */
+    /* Placeholder text */
+    [data-testid="stTextInput"] input::placeholder {
+        color: var(--text-muted) !important;
+    }
+
+    /* ── Select / Dropdown ── */
+    [data-testid="stSelectbox"] > div > div {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius) !important;
+        color: var(--text-primary) !important;
+    }
+
+    [data-testid="stSelectbox"] > div:focus-within > div {
+        border-color: var(--amber) !important;
+        box-shadow: 0 0 0 3px var(--amber-glow) !important;
+    }
+
+    /* ── Form container ── */
+    [data-testid="stForm"] {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius-lg) !important;
+        padding: 1.5rem !important;
+    }
+
+    /* ── Number input arrows ── */
+    [data-testid="stNumberInput"] button {
+        background: var(--bg-elevated) !important;
+        border: 1px solid var(--border) !important;
+        color: var(--text-secondary) !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Alert / Info / Success / Warning / Error
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stAlert"] {
+        border-radius: var(--radius) !important;
+        border-width: 1px !important;
+        font-size: 0.875rem !important;
+    }
+
+    [data-baseweb="notification"][kind="positive"],
+    .stSuccess > div {
+        background: rgba(22,163,74,0.08) !important;
+        border-color: var(--green) !important;
+        color: var(--green) !important;
+    }
+
+    [data-baseweb="notification"][kind="warning"],
+    .stWarning > div {
+        background: rgba(217,119,6,0.08) !important;
+        border-color: var(--amber) !important;
+        color: var(--amber) !important;
+    }
+
+    [data-baseweb="notification"][kind="info"],
+    .stInfo > div {
+        background: rgba(2,132,199,0.08) !important;
+        border-color: var(--sky) !important;
+        color: var(--sky) !important;
+    }
+
+    [data-baseweb="notification"][kind="negative"],
+    .stError > div {
+        background: rgba(220,38,38,0.08) !important;
+        border-color: var(--red) !important;
+        color: var(--red) !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Progress Bar
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stProgressBar"] > div {
+        background: var(--bg-elevated) !important;
+        border-radius: 4px !important;
+        overflow: hidden !important;
+    }
+
     [data-testid="stProgressBar"] > div > div {
-        background-color: #EAB308 !important;
+        background: linear-gradient(90deg, var(--amber-dim), var(--amber)) !important;
+        box-shadow: 0 0 10px var(--amber-glow-strong) !important;
+        border-radius: 4px !important;
+        transition: width 0.3s ease !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Spinner
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stSpinner"] > div {
+        border-top-color: var(--amber) !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Scrollbar
+    ═══════════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(245,158,11,0.25);
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+
+    /* ═══════════════════════════════════════════════════
+       Animations
+    ═══════════════════════════════════════════════════ */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 0 0 0 var(--amber-glow); }
+        50%       { box-shadow: 0 0 16px 4px var(--amber-glow); }
+    }
+
+    [data-testid="stMetric"]:nth-child(1) { animation-delay: 0s !important; }
+    [data-testid="stMetric"]:nth-child(2) { animation-delay: 0.1s !important; }
+    [data-testid="stMetric"]:nth-child(3) { animation-delay: 0.2s !important; }
+
+    /* ── Sidebar email-sync button glows ── */
+    [data-testid="stSidebar"] [data-testid="stButton"] > button {
+        border-color: var(--amber) !important;
+        animation: glowPulse 3s ease-in-out infinite !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       Match result containers
+    ═══════════════════════════════════════════════════ */
+    [data-testid="stVerticalBlock"] > div > [data-testid="stVerticalBlock"] {
+        background: var(--bg-card) !important;
+    }
+
+    /* ── Code / monospace ── */
+    code, pre {
+        font-family: var(--font-mono) !important;
+        background: var(--bg-elevated) !important;
+        color: var(--amber) !important;
+        border-radius: 4px !important;
+        padding: 0.1em 0.35em !important;
+        font-size: 0.85em !important;
+    }
+
+    /* ── Selectbox dropdown options ── */
+    ul[role="listbox"] {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius) !important;
+    }
+
+    ul[role="listbox"] li {
+        color: var(--text-secondary) !important;
+    }
+
+    ul[role="listbox"] li:hover,
+    ul[role="listbox"] li[aria-selected="true"] {
+        background: var(--amber-glow) !important;
+        color: var(--amber) !important;
     }
     </style>
     """, unsafe_allow_html=True)
