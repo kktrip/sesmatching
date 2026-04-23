@@ -1095,7 +1095,18 @@ def show_match_history():
             header_cols[2].markdown("**総合スコア**")
             header_cols[3].markdown("**スキルスコア**")
 
-            results = json.loads(m["results"])
+            try:
+                results = json.loads(m["results"])
+            except (json.JSONDecodeError, TypeError):
+                st.warning(f"履歴データの読み込みに失敗しました: {project_title}")
+                st.markdown("---")
+                continue
+
+            if not isinstance(results, list):
+                st.warning(f"履歴データの形式が不正です: {project_title}")
+                st.markdown("---")
+                continue
+
             for i, r in enumerate(results[:5]):
                 rank = rank_labels[i] if i < len(rank_labels) else f"{i + 1}位"
                 name = r.get("name", "氏名不明")
