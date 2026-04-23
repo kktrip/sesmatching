@@ -49,6 +49,11 @@ def init_db():
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        # マイグレーション: lark_message_id カラムを追加（既存DB対応）
+        try:
+            conn.execute("ALTER TABLE emails ADD COLUMN lark_message_id TEXT")
+        except Exception:
+            pass  # カラムが既に存在する場合はスキップ
 
 
 def insert_email(message_id, subject, sender, received_at, body, email_type):
@@ -92,14 +97,20 @@ def insert_match(project_id, results_json):
 def get_all_projects():
     with get_connection() as conn:
         return conn.execute(
-            "SELECT p.*, e.sender, e.received_at, e.body as email_body FROM projects p LEFT JOIN emails e ON p.email_id = e.id ORDER BY p.created_at DESC"
+            "SELECT p.*, e.sender, e.received_at, e.body as email_body, "
+            "e.message_id as imap_message_id, e.subject as email_subject, "
+            "e.lark_message_id "
+            "FROM projects p LEFT JOIN emails e ON p.email_id = e.id "
+            "ORDER BY p.created_at DESC"
         ).fetchall()
 
 
 def get_all_candidates():
     with get_connection() as conn:
         return conn.execute(
-            "SELECT c.*, e.sender, e.received_at, e.body as email_body "
+            "SELECT c.*, e.sender, e.received_at, e.body as email_body, "
+            "e.message_id as imap_message_id, e.subject as email_subject, "
+            "e.lark_message_id "
             "FROM candidates c LEFT JOIN emails e ON c.email_id = e.id "
             "ORDER BY c.created_at DESC"
         ).fetchall()
@@ -107,7 +118,14 @@ def get_all_candidates():
 
 def get_project_by_id(project_id):
     with get_connection() as conn:
-        return conn.execute("SELECT * FROM projects WHERE id=?", (project_id,)).fetchone()
+        return conn.execute(
+            "SELECT p.*, e.sender, e.received_at, e.body as email_body, "
+            "e.message_id as imap_message_id, e.subject as email_subject, "
+            "e.lark_message_id "
+            "FROM projects p LEFT JOIN emails e ON p.email_id = e.id "
+            "WHERE p.id=?",
+            (project_id,),
+        ).fetchone()
 
 
 def get_candidate_by_id(candidate_id):
@@ -165,3 +183,11 @@ def candidate_exists(name: str, sender: str) -> bool:
             (name, sender),
         ).fetchone()
         return row is not None
+
+
+def update_lark_message_id(email_id: int, lark_message_id: str) -> None:
+    with get_connection() as conn:
+        conn.execute(
+            "UPDATE emails SET lark_message_id=? WHERE id=?",
+            (lark_message_id, email_id),
+        )
