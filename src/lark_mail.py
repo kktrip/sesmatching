@@ -42,6 +42,8 @@ def get_app_access_token() -> str:
 
 
 def _search_messages(token: str, subject: str) -> list:
+    if not LARK_MAILBOX_USER:
+        raise RuntimeError("IMAP_USER (LARK_MAILBOX_USER) must be set in environment")
     mailbox_id = urllib.parse.quote(LARK_MAILBOX_USER, safe="")
     resp = requests.get(
         f"{LARK_BASE_URL}/mail/v1/user_mailboxes/{mailbox_id}/messages",

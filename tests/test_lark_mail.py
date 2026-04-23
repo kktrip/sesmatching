@@ -215,3 +215,21 @@ def test_get_latest_reply_returns_none_on_original_search_error():
             email_id=1, subject="案件A", sender="sender@example.com", cached_lark_id=None
         )
     assert result is None
+
+
+def test_get_app_access_token_raises_on_empty_credentials():
+    import src.lark_mail as lark_mail
+    lark_mail._token_cache["token"] = None
+    lark_mail._token_cache["expires_at"] = 0
+
+    with patch("src.lark_mail.LARK_APP_ID", ""), \
+         patch("src.lark_mail.LARK_APP_SECRET", ""):
+        with pytest.raises(RuntimeError, match="LARK_APP_ID and LARK_APP_SECRET must be set"):
+            lark_mail.get_app_access_token()
+
+
+def test_search_messages_raises_on_empty_mailbox_user():
+    import src.lark_mail as lark_mail
+    with patch("src.lark_mail.LARK_MAILBOX_USER", ""):
+        with pytest.raises(RuntimeError, match="IMAP_USER"):
+            lark_mail._search_messages("some_token", "subject")
