@@ -18,6 +18,7 @@ from src.database import (
     get_project_by_id,
     get_candidate_by_id,
     get_latest_match,
+    get_all_matches,
     insert_email,
     insert_project,
     insert_candidate,
@@ -712,6 +713,65 @@ with st.sidebar:
 # ────────────────────────────────────────────
 # Pages
 # ────────────────────────────────────────────
+
+
+def _paginate(items: list, key: str) -> list:
+    """Paginate a list of items with session state management.
+
+    Args:
+        items: List of items to paginate
+        key: Unique key for session state namespace (e.g. "projects", "candidates")
+
+    Returns:
+        Slice of items for current page
+    """
+    size_key = f"page_size_{key}"
+    page_key = f"page_{key}"
+
+    if size_key not in st.session_state:
+        st.session_state[size_key] = 10
+    if page_key not in st.session_state:
+        st.session_state[page_key] = 0
+
+    total = len(items)
+    page_size = st.session_state[size_key]
+    total_pages = max(1, (total + page_size - 1) // page_size)
+
+    if st.session_state[page_key] >= total_pages:
+        st.session_state[page_key] = total_pages - 1
+
+    col_count, col_size = st.columns([3, 2])
+    with col_count:
+        st.caption(f"{total} 件")
+    with col_size:
+        new_size = st.selectbox(
+            "表示件数",
+            [10, 20, 50, 100],
+            index=[10, 20, 50, 100].index(page_size),
+            key=f"selectbox_{key}",
+            label_visibility="collapsed",
+        )
+        if new_size != page_size:
+            st.session_state[size_key] = new_size
+            st.session_state[page_key] = 0
+            st.rerun()
+
+    current_page = st.session_state[page_key]
+    col_prev, col_label, col_next = st.columns([1, 2, 1])
+    with col_prev:
+        if st.button("← 前へ", key=f"prev_{key}", disabled=(current_page == 0)):
+            st.session_state[page_key] -= 1
+            st.rerun()
+    with col_label:
+        st.caption(f"ページ {current_page + 1} / {total_pages}")
+    with col_next:
+        if st.button("次へ →", key=f"next_{key}", disabled=(current_page >= total_pages - 1)):
+            st.session_state[page_key] += 1
+            st.rerun()
+
+    start = current_page * page_size
+    return items[start : start + page_size]
+
 
 def show_dashboard():
     st.header("📊 ダッシュボード")
