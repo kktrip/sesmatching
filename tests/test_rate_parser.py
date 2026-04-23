@@ -39,3 +39,11 @@ def test_unparseable():
 
 def test_sen_unit():
     assert _parse_rate_yen("800千円") == (800000, 800000)
+
+
+def test_range_ascii_tilde():
+    assert _parse_rate_yen("60~70万円") == (600000, 700000)
+
+
+def test_range_zenkaku_tilde():
+    assert _parse_rate_yen("60～70万円") == (600000, 700000)

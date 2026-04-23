@@ -975,7 +975,7 @@ def show_candidates():
             return False
 
         if (q_rate_min > 0 or q_rate_max > 0) and not (q_rate_min > 0 and q_rate_max > 0 and q_rate_min > q_rate_max):
-            cand_min, cand_max = _parse_rate_yen(data.get("desired_rate") or "")
+            cand_min, cand_max = _parse_rate_yen(data.get("desired_rate"))
             if cand_min is not None or cand_max is not None:
                 filter_min = q_rate_min * 10000
                 filter_max = q_rate_max * 10000
