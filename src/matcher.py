@@ -1,4 +1,5 @@
 import json
+import re
 import os
 import anthropic
 from dotenv import load_dotenv
@@ -22,6 +23,18 @@ def _parse_json_response(text: str) -> list:
         inner = lines[1:-1] if lines[-1].strip() == "```" else lines[1:]
         text = "\n".join(inner)
     return json.loads(text)
+
+
+def _extract_relevant_excerpt(text: str, required_skills: list, max_chars: int = 300) -> str:
+    """Return skill-sheet excerpt containing only sentences relevant to required_skills."""
+    if not text:
+        return ""
+    keywords = [s.lower() for s in required_skills]
+    sentences = re.split(r'[。\n]+', text)
+    relevant = [s.strip() for s in sentences
+                if any(kw in s.lower() for kw in keywords) and s.strip()]
+    excerpt = "　".join(relevant)[:max_chars]
+    return excerpt or text[:150]
 
 
 def _keyword_score(project_data: dict, candidate: dict) -> int:
