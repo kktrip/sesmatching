@@ -245,3 +245,23 @@ def test_get_latest_reply_raises_on_empty_mailbox_user():
             lark_mail.get_latest_reply_lark_id(
                 email_id=1, subject="案件A", sender="sender@example.com", cached_lark_id=None
             )
+
+
+def test_get_latest_reply_falls_back_to_unfiltered_when_sender_mismatch():
+    import src.lark_mail as lark_mail
+    lark_mail._token_cache["token"] = "tok"
+    lark_mail._token_cache["expires_at"] = time.time() + 3600
+
+    # All replies are from a different sender than the one we're looking for
+    replies = [
+        make_item("reply_a", "Re: 案件B", "other@example.com", date=100),
+        make_item("reply_b", "Re: 案件B", "other@example.com", date=999),
+    ]
+
+    with patch("src.lark_mail.requests.get", return_value=make_messages_response(replies)):
+        result = lark_mail.get_latest_reply_lark_id(
+            email_id=1, subject="案件B", sender="original@example.com", cached_lark_id=None
+        )
+
+    # Should fall back to newest of unfiltered list
+    assert result == "reply_b"
