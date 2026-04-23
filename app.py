@@ -818,6 +818,10 @@ def show_projects():
                 st.write(f"**勤務形態:** {data.get('work_style', '不明')}")
                 st.write(f"**単価/予算:** {data.get('budget', '非公開')}")
                 st.write(f"**送信者:** {p['sender']}")
+            email_body = p["email_body"] if "email_body" in p.keys() else None
+            if email_body:
+                with st.expander("📧 メール全文を見る"):
+                    st.text(email_body)
 
 
 def show_candidates():

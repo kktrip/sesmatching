@@ -92,7 +92,7 @@ def insert_match(project_id, results_json):
 def get_all_projects():
     with get_connection() as conn:
         return conn.execute(
-            "SELECT p.*, e.sender, e.received_at FROM projects p LEFT JOIN emails e ON p.email_id = e.id ORDER BY p.created_at DESC"
+            "SELECT p.*, e.sender, e.received_at, e.body as email_body FROM projects p LEFT JOIN emails e ON p.email_id = e.id ORDER BY p.created_at DESC"
         ).fetchall()
 
 
