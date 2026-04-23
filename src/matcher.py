@@ -29,8 +29,10 @@ def _extract_relevant_excerpt(text: str, required_skills: list, max_chars: int =
     """Return skill-sheet excerpt containing only sentences relevant to required_skills."""
     if not text:
         return ""
+    if not required_skills:
+        return text[:150]
     keywords = [s.lower() for s in required_skills]
-    sentences = re.split(r'[。\n]+', text)
+    sentences = re.split(r'[。\r\n]+', text)
     relevant = [s.strip() for s in sentences
                 if any(kw in s.lower() for kw in keywords) and s.strip()]
     excerpt = "　".join(relevant)[:max_chars]
