@@ -62,10 +62,16 @@ def get_latest_reply_lark_id(
     sender: str,
     cached_lark_id: str | None,
 ) -> str | None:
-    token = get_app_access_token()
+    try:
+        token = get_app_access_token()
+    except Exception:
+        return None
 
-    # 1. 常に最新の返信メールを検索
-    reply_items = _search_messages(token, f"Re: {subject}")
+    try:
+        reply_items = _search_messages(token, f"Re: {subject}")
+    except Exception:
+        return cached_lark_id  # API失敗 → キャッシュかNone
+
     if reply_items:
         # 送信者でフィルター（異なる会社の同件名メールを除外）
         sender_lower = sender.lower()
@@ -83,7 +89,11 @@ def get_latest_reply_lark_id(
         return cached_lark_id
 
     # 3. 元メールを検索してキャッシュ
-    original_items = _search_messages(token, subject)
+    try:
+        original_items = _search_messages(token, subject)
+    except Exception:
+        return None
+
     if original_items:
         for item in original_items:
             item_sender = item.get("from", {}).get("mail_address", "")
